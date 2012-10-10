@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<gallery>
+  <images>
+    <image filename="galeries/Paysages/images/Chrysanthemum.jpg" order="1" display="1">
+      <caption>Chrysanthemum.jpg</caption>
+    </image>
+    <image filename="galeries/Paysages/images/Desert.jpg" order="2" display="1">
+      <caption>Desert.jpg</caption>
+    </image>
+    <image filename="galeries/Paysages/images/Hydrangeas.jpg" order="3" display="1">
+      <caption>Hydrangeas.jpg</caption>
+    </image>
+    <image filename="galeries/Paysages/images/Jellyfish.jpg" order="4" display="1">
+      <caption>Jellyfish.jpg</caption>
+    </image>
+    <image filename="galeries/Paysages/images/Koala.jpg" order="5" display="1">
+      <caption>Koala.jpg</caption>
+    </image>
+    <image filename="galeries/Paysages/images/Lighthouse.jpg" order="6" display="1">
+      <caption>Lighthouse.jpg</caption>
+    </image>
+    <image filename="galeries/Paysages/images/panorama_sommet.jpg" order="7" display="1">
+      <caption>panorama_sommet.jpg</caption>
+    </image>
+    <image filename="galeries/Paysages/images/Penguins.jpg" order="8" display="1">
+      <caption>Penguins.jpg</caption>
+    </image>
+    <image filename="galeries/Paysages/images/Tulips.jpg" order="9" display="1">
+      <caption>Tulips.jpg</caption>
+    </image>
+  </images>
+</gallery>
