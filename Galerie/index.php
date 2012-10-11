@@ -6,8 +6,6 @@
 <title>Photo Gallery</title>
 </head>
 <body>
-	<ul>
-		<?=$dispContent->displayListGallery(); ?>
-	</ul>
+	<?=$dispContent->displayListGallery(); ?>
 </body>
 </html>
