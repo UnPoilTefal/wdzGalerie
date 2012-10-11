@@ -27,9 +27,7 @@ class DisplayContent {
 		
 		$html = '<ul>';
 		foreach ($contenu_galeries as $nom_gallery) {
-
 			$html = $html."<li><a href='screen.html?galleryname=" . $nom_gallery . "'>" . $nom_gallery . "</a></li>";
-
 		}
 		$html = $html.'</ul>';
 		
