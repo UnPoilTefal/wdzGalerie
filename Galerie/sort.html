@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link href="css/designSort.css" type="text/css" rel="stylesheet"></link>
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="http://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
+<script src="js/coreGallery.js"></script>
+
+<script type="text/javascript">
+	function saveState() {
+		var items = [];
+		// traverse all column div and fetch its id and its item detail. 
+			$(".dragbox", this).each(function(i) { // here i is the order, it start from 0 to...
+				var image = {
+					id : $('img', this).attr('src'),
+					order : i
+				}
+				items.push(image);
+			});
+		$("#results").html("chargement...");
+		var shortorder = {
+				items : items
+		};
+		$.ajax({
+			url : 'application/classes/SortGalerie.php',
+			async : false,
+			data : shortorder,
+			dataType : "html",
+			type : "POST",
+			success : function(html) {
+				$("#results").html(html).delay(1000).fadeOut();
+			}
+		});
+	}
+
+	$(function() {
+		$('#container').sortable({
+			/* connectWith : '.image',*/
+			cursor : 'move',
+			placeholder : 'placeholder',
+			/* forcePlaceholderSize : true, */
+			opacity : 0.4,
+			stop : function(event, ui) {
+				saveState();
+			}
+		});
+		$('#container').disableSelection();
+	});
+	$(document).ready(function(){
+		  var galleryname = GetURLParameter('galleryname');
+		  var galleryContent = "galeries/" + galleryname + "/" + galleryname + "GalleryContent.xml";
+		  
+		  $.ajax({
+		    type: "GET",
+		    url: galleryContent,
+		    dataType: "xml",
+		    success: initSort,
+		    error: function() {
+		      alert("Une erreur s'est produite lors du traitement du fichier XML.");
+		    }
+		  });
+		  
+		});	
+</script>
+</head>
+<body>
+	<div id="results"></div>
+	<ul id="container">
+	</ul>
+</body>
+</html>

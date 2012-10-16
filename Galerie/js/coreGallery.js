@@ -78,20 +78,35 @@ function initSlideShow() {
 
 }
 
-function readGalleryContent(xml){
+function initScreen(xml){
 
-    var sorted = $(xml).find('image').sort(matchOrder);
+    var sorted = sortGalleryXml(xml);
+    readGalleryImages(sorted);
+    initSlideShow();
+}
+function initSort(xml){
 
-    $(sorted).each(function(){
+    var sorted = sortGalleryXml(xml);
+    readGalleryImages(sorted);
+}
+
+function sortGalleryXml(xml) {
+	
+	var sorted = $(xml).find('image').sort(matchOrder);
+	
+	return $(sorted);
+}
+
+function readGalleryImages(images){
+
+    $(images).each(function(){
       if($(this).attr('display') == '1') {
         var sFilename = $(this).attr('filename');
         var sOrder = $(this).attr('order');
         var sCaption = $(this).find('caption').text();
-        var sHtml = "<div class='image'><a rel='gallery' title='" + sCaption + "' href='" + sFilename + "'><img src='" + sFilename + "' /></a></div>"
+        var sHtml = "<li class='image'><a rel='gallery' title='" + sCaption + "' href='" + sFilename + "'><img src='" + sFilename + "' /></a></li>"
         $("#container").append(sHtml);
       }
     });
-    
-    
-    initSlideShow();
+	
 }

@@ -2,7 +2,7 @@ a img {
   border: none;
 }
 
-li.image{
+li.image, .placeholder{
 	padding:5px;
 	float:left;
   width: 160px;
@@ -23,6 +23,15 @@ li.image img{
   text-align:left;
 }
 
+li.image img{
+  width:auto;
+  height:auto;
+  max-width:160px;
+  max-height:160px;
+  vertical-align:middle;
+  text-align:left;
+}
+
 html{
 	height:100%;
 	margin:0;
@@ -39,16 +48,32 @@ body{
 }
 
 #container{
-	width:1457px;
+	width:100%;
 	min-height:200px;
 	height:100%;
 	background-color:#000;
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
-
+	
 }
 
+#results{
+color: white;	
+
+}
 a{
 color: rgb(0, 114, 191); text-decoration: none;	
+}
+
+#container .dragbox {
+	margin: 5px;
+	background: #fff;
+	position: relative;
+	border: 1px solid #ddd;
+}
+
+#container .placeholder {
+	background: #fff;
+	border: 2px dashed #883533;
 }

@@ -11,29 +11,28 @@
 <script src="js/coreGallery.js"></script>
 
 <script>
-  
-//Code Starts
-$(document).ready(function(){
-  var galleryname = GetURLParameter('galleryname');
-  var galleryContent = "galeries/" + galleryname + "/" + galleryname + "GalleryContent.xml";
-  
-  $.ajax({
-    type: "GET",
-    url: galleryContent,
-    dataType: "xml",
-    success: readGalleryContent,
-    error: function() {
-      alert("Une erreur s'est produite lors du traitement du fichier XML.");
-    }
-  });
-  
-});
-//Code Ends
-    </script>
+
+	$(document).ready(function(){
+	  var galleryname = GetURLParameter('galleryname');
+	  var galleryContent = "galeries/" + galleryname + "/" + galleryname + "GalleryContent.xml";
+	  
+	  $.ajax({
+	    type: "GET",
+	    url: galleryContent,
+	    dataType: "xml",
+	    success: initScreen,
+	    error: function() {
+	      alert("Une erreur s'est produite lors du traitement du fichier XML.");
+	    }
+	  });
+	  
+	});
+
+</script>
 </head>
 
 <body>
-<div id='container'>
-</div>
+<ul id='container'>
+</ul>
 </body>
 </html>
