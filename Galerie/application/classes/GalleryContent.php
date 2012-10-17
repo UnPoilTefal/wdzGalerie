@@ -7,6 +7,7 @@ class GalleryContent {
 	private $document;
 	private $root;
 	private $images;
+	private $nb_existing_images;
 	
 	function __construct($galleryName){
 		
@@ -15,8 +16,18 @@ class GalleryContent {
 		$this->web_images_directory = $configEnv->getWebUrl() . '/' . $galleryName . '/images/';
 		$this->xml_url = $configEnv->getFileUrl() . '/' . $galleryName . '/' . $galleryName.'GalleryContent.xml';
 		
+		$this->nb_existing_images = 0;
+		
 		$this->initDocument();
 		
+		if (file_exists($this->xml_url)) {
+			$this->initExistingDoc();
+		}
+		
+	}
+	
+	function getNbExistingImages() {
+		return $this->nb_existing_images;
 	}
 	
 	function getFileImagesDirectory() {
@@ -75,10 +86,63 @@ class GalleryContent {
 		$captionElem = $this->document->createElement('caption', $caption);
 		$captionElem = $imageElem->appendChild($captionElem);
 		
+		$this->nb_existing_images ++;
+		
 	}
 	
 	function save() {
 		return $this->document->save($this->xml_url);
+	}
+	
+	private function sort_by_order_attr($a, $b)	{
+		return (int) $a['image']->getAttribute('order') - (int) $b['image']->getAttribute('order');
+	}
+	
+	private function initExistingDoc() {
+		
+		$existingxml = new DOMDocument();
+		$existingxml->load($this->xml_url);
+		
+		$existingimages = $existingxml->getElementsByTagName('image');
+
+		if($existingimages->length > 0) {
+			$tableauimages = $this->getImageArrayFromImageNode($existingimages);
+		
+			usort($tableauimages, array($this, 'sort_by_order_attr'));
+		
+			$nb_existingimg = count($tableauimages);
+		
+			$nb_order = 0;
+			if($nb_existingimg > 0) {
+				foreach ($tableauimages as $existingimage) {
+					$nb_order++;
+		
+					$filename = $existingimage['image']->getAttribute('filename');
+					$order = $nb_order;
+					$display = $existingimage['image']->getAttribute('display');
+					$caption = $existingimage['caption'];
+		
+					$this->addImage($filename, $order, $display, $caption);
+		
+				}
+			}
+		}
+	}
+	
+	private function getImageArrayFromImageNode($imageNode) {
+	
+		$lst_images = array();
+		foreach ($imageNode as $n) {
+	
+			$imagecontent = array();
+			$imagecontent['image'] = $n;
+			$lst_caption = $n->getElementsByTagName('caption');
+			foreach ($lst_caption as $caption) {
+				$imagecontent['caption'] = $caption->nodeValue;
+			}
+			$lst_images[] = $imagecontent;
+		}
+		return $lst_images;
 	}
 	
 }

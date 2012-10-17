@@ -1,11 +1,28 @@
 <?php
 
-$data = $_POST;
-foreach($data as $d){
+$data = $_POST['images'];
+$galleryname = $_POST['galleryname'];
+sortGallery();
+
+function sortGallery() {
 	
-	$filename = $d['id'];
-	$order = $d['order'];
+	$exportDoc = new GalleryContent($galleryName);
+	$imagesNodeList = $exportDoc->getImages()->getElementsByTagName('image');
+	
+	foreach ($imagesNodeList as $existingImage) {
+	
+		foreach($data as $image){
+			$filename = $image['id'];
+			$order = $image['order'];
+	
+			if ($existingImage->getAttribute('filename') == $filename) {
+				$existingImage->setAttribute('order', $order);
+			}
+	
+		}
+	
+	}
 	
 }
-echo "Saved";
+echo "Updated";
 ?>
