@@ -2,25 +2,15 @@ a img {
   border: none;
 }
 
-li.image, .placeholder{
-	padding:5px;
+#container li {
+	/*padding:5px;*/
 	float:left;
-  width: 160px;
-  height: 160px;
-  border:1px solid #fff;
-  margin: 5px;
-  text-align: center;
-  line-height:160px;
-}
-
-li.image img{
-  width:auto;
-  height:auto;
-  max-width:160px;
-  max-height:160px;
-  display:inline-block;
-  vertical-align:middle;
-  text-align:left;
+  	max-width: 160px;
+  	max-height: 160px;
+  	border:1px solid #fff;
+  	margin: 2.5px;
+  	text-align: center;
+  	line-height:160px;
 }
 
 li.image img{
@@ -40,40 +30,36 @@ html{
 	background-color:#242424;
 	font-family:arial;
 }
+
 body{
 	height:100%;
 	margin:0 auto;
 	padding:0;
-	width:92%;
-}
+	/*width:92%;*/
+	font: 62.5% "Trebuchet MS", sans-serif;
+	margin: 50px;}
 
 #container{
 	width:100%;
 	min-height:200px;
 	height:100%;
-	background-color:#000;
+	/*background-color:#000;*/
 	list-style-type: none;
-	margin: 0;
-	padding: 0;
-	
+	margin: 0 auto;
+	padding: 5px;
 }
-
-#results{
-color: white;	
-
-}
-a{
-color: rgb(0, 114, 191); text-decoration: none;	
+#message {
+	height: 40px;	
 }
 
 #container .dragbox {
-	margin: 5px;
-	background: #fff;
-	position: relative;
+	/*margin: 5px;*/
+	/*background: #fff;*/
+	/*position: relative;*/
 	border: 1px solid #ddd;
 }
 
 #container .placeholder {
-	background: #fff;
-	border: 2px dashed #883533;
+	/*background: #fff;*/
+	/*border: 2px dashed #883533;*/
 }

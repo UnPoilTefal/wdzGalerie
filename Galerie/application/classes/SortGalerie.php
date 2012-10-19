@@ -1,12 +1,13 @@
 <?php
+require_once 'init.php';
 
 $data = $_POST['images'];
 $galleryname = $_POST['galleryname'];
-sortGallery();
+sortGallery($galleryname, $data);
 
-function sortGallery() {
+function sortGallery($galleryname, $data) {
 	
-	$exportDoc = new GalleryContent($galleryName);
+	$exportDoc = new GalleryContent($galleryname);
 	$imagesNodeList = $exportDoc->getImages()->getElementsByTagName('image');
 	
 	foreach ($imagesNodeList as $existingImage) {
@@ -22,7 +23,11 @@ function sortGallery() {
 		}
 	
 	}
+	$exportDoc->save();
 	
 }
-echo "Updated";
+echo '<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+		<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+		<strong>Gallery status :</strong> Updated.</p>
+	</div>';
 ?>

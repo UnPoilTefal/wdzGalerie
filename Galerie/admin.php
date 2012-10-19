@@ -6,7 +6,6 @@
 <title>Photo Gallery</title>
 </head>
 <body>
-<ul>
 <?php 
 
 if ($handle = opendir($configEnv->getFileUrl()))
@@ -23,13 +22,23 @@ if ($handle = opendir($configEnv->getFileUrl()))
 	}
 	closedir($handle);
 }
+echo "<div><span>Initialisation des fichiers XML :</span></div><ul>";
 foreach ($contenu_galeries as $nom_gallery) {
 
 	echo "<li><a href='admin.php?galleryname=" . $nom_gallery . "&action=refreshxml'>Initialisation de " . $nom_gallery . "</a></li>";
+	
 
 }
+echo "</ul>";
+echo "<div><span>Organisation des images :</span></div><ul>";
+foreach ($contenu_galeries as $nom_gallery) {
+
+	echo "<li><a href='sort.html?galleryname=" . $nom_gallery . "'>Organisation de " . $nom_gallery . "</a></li>";
+	
+
+}
+echo "</ul>"
 ?>
-</ul>
 <?php
  if(isset($_REQUEST['action']) AND $_REQUEST['action'] == 'refreshxml') {
 	$galleryName = $_REQUEST['galleryname'];
