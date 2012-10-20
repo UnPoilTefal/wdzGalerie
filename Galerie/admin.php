@@ -46,6 +46,6 @@ echo "</ul>"
 	echo "<div>" . $xmlGal->generateXml($galleryName) . "</div>";
 }	
 ?>
-<div></div>
+
 </body>
 </html>

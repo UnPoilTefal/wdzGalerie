@@ -37,7 +37,7 @@
 			$('#container').disableSelection();
 			$( "#retour" ).button();
 			$( "#retour" ).click(function( event ) {
-				$(location).attr('href','admin.php');
+				$(location).attr('href','index.php');
 				event.preventDefault();
 			});
 
@@ -81,9 +81,14 @@
 <body>
 	<div id="message">
 		<div id="results" class="ui-widget"></div>
+	</div>
+	<div id="main" class="ui-widget-content">
+	<ul id="container" >
+	</ul>
+	<div id="footer">
 		<button id="retour">Retour</button>
 	</div>
-	<ul id="container" class="ui-widget-content">
-	</ul>
+	<br class="clear"/>
+	</div>
 </body>
 </html>

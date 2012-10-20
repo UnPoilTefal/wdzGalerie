@@ -104,7 +104,7 @@ function readGalleryImagesWithLink(images){
         var sFilename = $(this).attr('filename');
         var sOrder = $(this).attr('order');
         var sCaption = $(this).find('caption').text();
-        var sHtml = "<li class='image '><a rel='gallery' title='" + sCaption + "' href='" + sFilename + "'><img src='" + sFilename + "' /></a></li>"
+        var sHtml = "<li class='image ui-corner-all'><a rel='gallery' title='" + sCaption + "' href='" + sFilename + "'><img src='" + sFilename + "' /></a></li>"
         $("#container").append(sHtml);
       }
     });

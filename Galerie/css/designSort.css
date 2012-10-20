@@ -23,7 +23,7 @@ li.image img{
 }
 
 html{
-	height:100%;
+	/*height:100%;*/
 	margin:0;
 	padding:0;
 	width:100%;
@@ -32,17 +32,20 @@ html{
 }
 
 body{
-	height:100%;
+	/*height:100%;*/
 	margin:0 auto;
 	padding:0;
 	/*width:92%;*/
 	font: 62.5% "Trebuchet MS", sans-serif;
 	margin: 50px;}
-
+#main {
+	height: auto;
+	margin: 5px;
+	position: relative;
+}
 #container{
-	width:100%;
+	/*width:100%;*/
 	min-height:200px;
-	height:100%;
 	/*background-color:#000;*/
 	list-style-type: none;
 	margin: 0 auto;
@@ -62,4 +65,16 @@ body{
 #container .placeholder {
 	/*background: #fff;*/
 	/*border: 2px dashed #883533;*/
+}
+
+.clear { 
+	clear: both;
+	margin: 5px auto;
+}
+
+#footer {
+	float: left;
+	width: 100%;
+	min-height: 50px;
+	margin: 5px;
 }

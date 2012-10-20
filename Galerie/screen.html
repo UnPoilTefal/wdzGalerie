@@ -5,8 +5,10 @@
 <title>Photo Gallery</title>
 
 <link href="css/fullscreenstyle.css" type="text/css" rel="stylesheet"></link>
-<link href="css/design.css" type="text/css" rel="stylesheet"></link>
+<link href="css/designSort.css" type="text/css" rel="stylesheet"></link>
+<link href="css/ui-gallery/jquery-ui-1.9.0.custom.min.css" rel="stylesheet">
 <script src="http://code.jquery.com/jquery.js"></script>
+<script src="http://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
 <script src="js/jquery.fullscreenslides.js"></script>
 <script src="js/coreGallery.js"></script>
 
@@ -25,14 +27,28 @@
 	      alert("Une erreur s'est produite lors du traitement du fichier XML.");
 	    }
 	  });
-	  
+		$( "#retour" ).button();
+		$( "#retour" ).click(function( event ) {
+			$(location).attr('href','index.php');
+			event.preventDefault();
+		});
+
 	});
 
 </script>
 </head>
 
 <body>
-<ul id='container'>
-</ul>
+	<div id="message">
+		<div id="results" class="ui-widget"></div>
+	</div>
+	<div id="main" class="ui-widget-content">
+	<ul id="container" >
+	</ul>
+	<div id="footer">
+		<button id="retour">Retour</button>
+	</div>
+	<br class="clear"/>
+	</div>
 </body>
 </html>
