@@ -101,10 +101,11 @@ function readGalleryImagesWithLink(images){
 
     $(images).each(function(){
       if($(this).attr('display') == '1') {
-        var sFilename = $(this).attr('filename');
+        var sUrl = $(this).attr('url');
+        var sThumb = $(this).find('thumb').attr('thumburl');
         var sOrder = $(this).attr('order');
         var sCaption = $(this).find('caption').text();
-        var sHtml = "<li class='image ui-corner-all'><a rel='gallery' title='" + sCaption + "' href='" + sFilename + "'><img src='" + sFilename + "' /></a></li>"
+        var sHtml = "<li class='image'><a rel='gallery' title='" + sCaption + "' href='" + sUrl + "'><img src='" + sThumb + "' class='fade'/></a></li>"
         $("#container").append(sHtml);
       }
     });
@@ -115,10 +116,12 @@ function readGalleryImages(images){
 
     $(images).each(function(){
       if($(this).attr('display') == '1') {
+        var sUrl = $(this).attr('url');
         var sFilename = $(this).attr('filename');
+        var sThumb = $(this).find('thumb').attr('thumburl');
         var sOrder = $(this).attr('order');
         var sCaption = $(this).find('caption').text();
-        var sHtml = "<li class='image dragbox ui-corner-all'><img src='" + sFilename + "' /></li>"
+        var sHtml = "<li class='image dragbox'><img src='" + sThumb + "' class='fade' rel='" + sFilename + "'/></li>"
         $("#container").append(sHtml);
       }
     });

@@ -5,23 +5,38 @@ a img {
 #container li {
 	/*padding:5px;*/
 	float:left;
-  	max-width: 160px;
-  	max-height: 160px;
-  	border:1px solid #fff;
-  	margin: 2.5px;
+  	width: 222px;
+  	height: 112px;
   	text-align: center;
-  	line-height:160px;
+  	line-height:112px;
+	border:1px solid #595959;
+	margin: 6px 6px;
+	padding: 1px;
 }
 
 li.image img{
   width:auto;
   height:auto;
-  max-width:160px;
-  max-height:160px;
+  max-width:220px;
+  max-height:110px;
   vertical-align:middle;
   text-align:left;
 }
-
+.fade {
+   opacity: 0.5;
+   transition: opacity .25s ease-in-out;
+   -moz-transition: opacity .25s ease-in-out;
+   -webkit-transition: opacity .25s ease-in-out;
+}
+.fadeBG {
+   opacity: 0.5;
+   transition: opacity .25s ease-in-out;
+   -moz-transition: opacity .25s ease-in-out;
+   -webkit-transition: opacity .25s ease-in-out;
+}
+.fade:hover {
+   opacity: 1;
+}
 html{
 	/*height:100%;*/
 	margin:0;
@@ -40,12 +55,12 @@ body{
 	margin: 50px;}
 #main {
 	height: auto;
-	margin: 5px;
+	/*margin: 5px;*/
 	position: relative;
 }
 #container{
 	/*width:100%;*/
-	min-height:200px;
+	min-height:220px;
 	/*background-color:#000;*/
 	list-style-type: none;
 	margin: 0 auto;
@@ -69,7 +84,7 @@ body{
 
 .clear { 
 	clear: both;
-	margin: 5px auto;
+	/*margin: 5px auto;*/
 }
 
 #footer {

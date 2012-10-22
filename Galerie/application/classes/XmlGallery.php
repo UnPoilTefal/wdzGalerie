@@ -32,7 +32,7 @@ class XmlGallery {
 			$alreadyexist = '0';
 			
 			foreach ($imagesNodeList as $currentimage) {
-				if ($currentimage->getAttribute('filename') == $exportDoc->getWebImagesDirectory(). $lst_imgfromdir[$x]) {
+				if ($currentimage->getAttribute('filename') == $lst_imgfromdir[$x]) {
 					$alreadyexist = '1';
 					break;
 				}
@@ -41,14 +41,15 @@ class XmlGallery {
 			if($alreadyexist == '0') {
 				$newimageorder++;
 
-				$filename = $exportDoc->getWebImagesDirectory() . $lst_imgfromdir[$x];
+				$filename = $lst_imgfromdir[$x];
 				$order = $newimageorder;
 				$display = '1';
-				$caption = $lst_imgfromdir[$x];
+				$caption = $exportDoc->getGalleryName();
 				
 				$exportDoc->addImage($filename, $order, $display, $caption);
 		
 			}
+			
 		}
 		
 		echo 'Ecrit : ' . $exportDoc->save() . ' bytes';		

@@ -47,7 +47,7 @@
 				// traverse all column div and fetch its id and its item detail. 
 					$(".image").each(function(i) { // here i is the order, it start from 0 to...
 						var image = {
-							id : $('img', this).attr('src'),
+							id : $('img', this).attr('rel'),
 							order : i +1
 						}
 						items.push(image);
