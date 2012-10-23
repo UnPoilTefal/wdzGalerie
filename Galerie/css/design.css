@@ -12,8 +12,11 @@ a img {
 	border:1px solid #595959;
 	margin: 6px 6px;
 	padding: 1px;
+	background-color:#000;
 }
-
+li.image {
+	display: block;
+}
 li.image img{
   width:auto;
   height:auto;
@@ -34,6 +37,9 @@ li.image img{
    -moz-transition: opacity .25s ease-in-out;
    -webkit-transition: opacity .25s ease-in-out;
 }
+.fadeBGOFF {
+   opacity: 1;
+}
 .fade:hover {
    opacity: 1;
 }
@@ -42,7 +48,7 @@ html{
 	margin:0;
 	padding:0;
 	width:100%;
-	background-color:#242424;
+	background-color:#000;
 	font-family:arial;
 }
 
@@ -54,6 +60,8 @@ body{
 	font: 62.5% "Trebuchet MS", sans-serif;
 	margin: 50px;}
 #main {
+	border:1px solid #595959;
+	background-color:#242424;
 	height: auto;
 	/*margin: 5px;*/
 	position: relative;
@@ -61,15 +69,23 @@ body{
 #container{
 	/*width:100%;*/
 	min-height:220px;
-	/*background-color:#000;*/
 	list-style-type: none;
 	margin: 0 auto;
 	padding: 5px;
 }
 #message {
-	height: 40px;	
+	top: 0;
+	left: 0;
+	width: 100%;
+  	position: absolute;
+  	z-index: 2;
+    text-align: left;
+    vertical-align:middle;
+  	line-height: 1em;	
 }
-
+html>body #message {
+  position: fixed
+}
 #container .dragbox {
 	/*margin: 5px;*/
 	/*background: #fff;*/
@@ -79,7 +95,7 @@ body{
 
 #container .placeholder {
 	/*background: #fff;*/
-	/*border: 2px dashed #883533;*/
+	/*border: 2px dashed #595959;*/
 }
 
 .clear { 

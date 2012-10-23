@@ -1,21 +1,3 @@
-function matchOrder(a, b) {
-   return parseInt($(a).attr('order')) - parseInt($(b).attr('order'));
-}
-
-function GetURLParameter(sParam)
-{
-    var sPageURL = window.location.search.substring(1);
-    var sURLVariables = sPageURL.split('&');
-    for (var i = 0; i < sURLVariables.length; i++) 
-    {
-        var sParameterName = sURLVariables[i].split('=');
-        if (sParameterName[0] == sParam) 
-        {
-            return sParameterName[1];
-        }
-    }
-}
-
 function initSlideShow() {
 
   // initialize the slideshow
@@ -31,11 +13,11 @@ function initSlideShow() {
       // The slideshow does not provide its own UI, so add your own
       // check the fullscreenstyle.css for corresponding styles
       $container
-        .append('<div class="ui" id="fs-close">&times;</div>')
+        .append('<div class="ui fade" id="fs-close">&times;</div>')
         .append('<div class="ui" id="fs-loader">Chargement...</div>')
-        .append('<div class="ui" id="fs-prev">&lt;</div>')
-        .append('<div class="ui" id="fs-next">&gt;</div>')
-        .append('<div class="ui" id="fs-caption"><span></span></div>');
+        .append('<div class="ui fade" id="fs-prev">&lt;</div>')
+        .append('<div class="ui fade" id="fs-next">&gt;</div>')
+        .append('<div class="ui fade" id="fs-caption"><span></span></div>');
       
       // Bind to the ui elements and trigger slideshow events
       $('#fs-prev').click(function(){
@@ -76,54 +58,4 @@ function initSlideShow() {
       $('#fs-caption').hide();
     });
 
-}
-
-function initScreen(xml){
-
-    var sorted = sortGalleryXml(xml);
-    readGalleryImagesWithLink(sorted);
-    initSlideShow();
-}
-function initSort(xml){
-
-    var sorted = sortGalleryXml(xml);
-    readGalleryImages(sorted);
-}
-
-function sortGalleryXml(xml) {
-	
-	var sorted = $(xml).find('image').sort(matchOrder);
-	
-	return $(sorted);
-}
-
-function readGalleryImagesWithLink(images){
-
-    $(images).each(function(){
-      if($(this).attr('display') == '1') {
-        var sUrl = $(this).attr('url');
-        var sThumb = $(this).find('thumb').attr('thumburl');
-        var sOrder = $(this).attr('order');
-        var sCaption = $(this).find('caption').text();
-        var sHtml = "<li class='image'><a rel='gallery' title='" + sCaption + "' href='" + sUrl + "'><img src='" + sThumb + "' class='fade'/></a></li>"
-        $("#container").append(sHtml);
-      }
-    });
-	
-}
-
-function readGalleryImages(images){
-
-    $(images).each(function(){
-      if($(this).attr('display') == '1') {
-        var sUrl = $(this).attr('url');
-        var sFilename = $(this).attr('filename');
-        var sThumb = $(this).find('thumb').attr('thumburl');
-        var sOrder = $(this).attr('order');
-        var sCaption = $(this).find('caption').text();
-        var sHtml = "<li class='image dragbox'><img src='" + sThumb + "' class='fade' rel='" + sFilename + "'/></li>"
-        $("#container").append(sHtml);
-      }
-    });
-	
 }

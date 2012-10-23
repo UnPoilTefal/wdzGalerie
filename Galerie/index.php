@@ -50,7 +50,7 @@ echo "</ul>";
 echo "<div><span>Organisation des images :</span></div><ul>";
 foreach ($contenu_galeries as $nom_gallery) {
 
-	echo "<li><a href='sort.html?galleryname=" . $nom_gallery . "'>Organisation de " . $nom_gallery . "</a></li>";
+	echo "<li><a href='sort.php?galleryname=" . $nom_gallery . "'>Organisation de " . $nom_gallery . "</a></li>";
 	
 
 }

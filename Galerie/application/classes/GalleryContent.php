@@ -13,7 +13,9 @@ class GalleryContent {
 	private $nb_existing_images;
 	
 	function __construct($galleryName){
-		
+		if($galleryName == '') {
+			throw new Exception("Le nom d'une galerie ne peut être vide!");
+		}
 		$configEnv = new ConfigEnv();
 		$this->gallery_name = $galleryName;
 		$this->file_images_directory = $configEnv->getFileUrl() . '/' . $galleryName . '/images/';
@@ -85,43 +87,52 @@ class GalleryContent {
 	}
 	
 	function addImage($filename, $order, $display, $caption) {
-
-		$imageElem = $this->document->createElement('image');
 		
-		$filenameAttr = $this->document->createAttribute('filename');
-		$urlAttr = $this->document->createAttribute('url');
-		$orderAttr = $this->document->createAttribute('order');
-		$displayAttr = $this->document->createAttribute('display');
-		
-		// Value for the created attribute
-		$filenameAttr->value = $filename;
-		$urlAttr->value = $this->getWebImagesDirectory() . $filename;
-		$orderAttr->value = $order;
-		$displayAttr->value = $display;
-		
-		// Don't forget to append it to the element
-		$imageElem->appendChild($filenameAttr);
-		$imageElem->appendChild($orderAttr);
-		$imageElem->appendChild($displayAttr);
-		$imageElem->appendChild($urlAttr);
-		
-		$imageElem = $this->images->appendChild($imageElem);
+		if(file_exists($this->getFileImagesDirectory() . $filename)) {
 			
-		$captionElem = $this->document->createElement('caption', $caption);
-		$captionElem = $imageElem->appendChild($captionElem);
+			$imageElem = $this->document->createElement('image');
+			
+			$filenameAttr = $this->document->createAttribute('filename');
+			$urlAttr = $this->document->createAttribute('url');
+			$orderAttr = $this->document->createAttribute('order');
+			$displayAttr = $this->document->createAttribute('display');
+			
+			// Value for the created attribute
+			$filenameAttr->value = $filename;
+			$urlAttr->value = $this->getWebImagesDirectory() . $filename;
+			$orderAttr->value = $order;
+			$displayAttr->value = $display;
+			
+			// Don't forget to append it to the element
+			$imageElem->appendChild($filenameAttr);
+			$imageElem->appendChild($orderAttr);
+			$imageElem->appendChild($displayAttr);
+			$imageElem->appendChild($urlAttr);
+			
+			$imageElem = $this->images->appendChild($imageElem);
+				
+			$captionElem = $this->document->createElement('caption', $caption);
+			$captionElem = $imageElem->appendChild($captionElem);
+			
+			$thumbElem = $this->document->createElement('thumb');
+			$thumUrlAttr = $this->document->createAttribute('thumburl');
+			$thumUrlAttr->value = $this->getWebThumbsDirectory() . $filename;
+			$thumbElem->appendChild($thumUrlAttr);
+			$captionElem = $imageElem->appendChild($thumbElem);
+			
+			if(!file_exists($this->getFileThumbsDirectory() . $filename)) {
+				$this->imagethumb($filename,'',150);
+			}
+			
+			$this->nb_existing_images ++;
 		
-		$thumbElem = $this->document->createElement('thumb');
-		$thumUrlAttr = $this->document->createAttribute('thumburl');
-		$thumUrlAttr->value = $this->getWebThumbsDirectory() . $filename;
-		$thumbElem->appendChild($thumUrlAttr);
-		$captionElem = $imageElem->appendChild($thumbElem);
-		
-		if(!file_exists($this->getFileThumbsDirectory() . $filename)) {
-			$this->imagethumb($filename,'',150);
+		} else {
+			if(file_exists($this->getFileThumbsDirectory() . $filename)) {
+				if(@unlink($this->getFileThumbsDirectory() . $filename) === false) {
+					echo "Echec Suppression " . $filename . "<br/>";
+				}
+			}
 		}
-		
-		$this->nb_existing_images ++;
-		
 	}
 	
 	function save() {
@@ -150,14 +161,13 @@ class GalleryContent {
 			if($nb_existingimg > 0) {
 				foreach ($tableauimages as $existingimage) {
 					$nb_order++;
-		
+					
 					$filename = $existingimage['image']->getAttribute('filename');
-					$order = $nb_order;
+					$order = $nb_order; 
 					$display = $existingimage['image']->getAttribute('display');
 					$caption = $existingimage['caption'];
 		
 					$this->addImage($filename, $order, $display, $caption);
-		
 				}
 			}
 		}
@@ -173,6 +183,10 @@ class GalleryContent {
 			$lst_caption = $n->getElementsByTagName('caption');
 			foreach ($lst_caption as $caption) {
 				$imagecontent['caption'] = $caption->nodeValue;
+			}
+			$lst_thumb = $n->getElementsByTagName('thumb');
+			foreach ($lst_thumb as $thumb) {
+				$imagecontent['thumb'] = $thumb->nodeValue;
 			}
 			$lst_images[] = $imagecontent;
 		}
