@@ -1,7 +1,5 @@
 <?php
 
-require_once 'lib/net/webdropzone/galerie/GalleryContent.php';
-
 /**
  * Sekeltron
  */
