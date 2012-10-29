@@ -14,7 +14,7 @@ class GalleryContent {
 	
 	function __construct($galleryName){
 		if($galleryName == '') {
-			throw new Exception("Le nom d'une galerie ne peut être vide!");
+			throw new Exception("Le nom d'une galerie ne peut ï¿½tre vide!");
 		}
 		$configEnv = new ConfigEnv();
 		$this->gallery_name = $galleryName;
@@ -121,7 +121,8 @@ class GalleryContent {
 			$captionElem = $imageElem->appendChild($thumbElem);
 			
 			if(!file_exists($this->getFileThumbsDirectory() . $filename)) {
-				$this->imagethumb($filename,'',150);
+				/*$this->imagethumb($filename,'',150);*/
+				throw new Exception("Les miniatures doivent Ãªtre initialisÃ©es.");
 			}
 			
 			$this->nb_existing_images ++;
@@ -199,7 +200,7 @@ class GalleryContent {
 		
 		if( !file_exists($image_src) ) return FALSE;
 	
-		// Récupère les infos de l'image
+		// Rï¿½cupï¿½re les infos de l'image
 		$fileinfo = getimagesize($image_src);
 		if( !$fileinfo ) return FALSE;
 	
@@ -310,7 +311,7 @@ class GalleryContent {
 			$func($new_image);
 		}
 	
-		// Libération de la mémoire
+		// Libï¿½ration de la mï¿½moire
 		imagedestroy($new_image);
 	
 		return TRUE;

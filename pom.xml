@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
+    <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.phpmaven</groupId>
@@ -7,79 +8,77 @@
         <version>2.0.2</version>
     </parent>
     
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>net.webdropzone.wdzPHP</groupId>
-	<artifactId>wdzGalerie</artifactId>
-	<packaging>php</packaging>
-	<version>1.0-SNAPSHOT</version>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.phpmaven</groupId>
-				<artifactId>maven-php-plugin</artifactId>
-				<extensions>true</extensions>
-			</plugin>
-		
-			<!--  The web assembyl -->
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2-beta-2</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.phpmaven</groupId>
-						<artifactId>maven-php-plugin</artifactId>
-						<version>1.0</version>
-					</dependency>
-				</dependencies>
-				<executions>
-					<execution>
-						<id>bundle-project-sources</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<configuration>
-							<descriptorRefs>
-								<descriptorRef>php-webapp</descriptorRef>
-							</descriptorRefs>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-site-plugin</artifactId>
-			    <version>3.0</version>
-			    <configuration>
-					<reportPlugins>
-						<plugin>
-							<groupId>org.phpmaven</groupId>
-							<artifactId>maven-php-plugin</artifactId>
-							<reportSets>
-								<reportSet>
-									<reports>
-										<report>phpdocumentor</report>
+    <properties>
+        <phpmaven.release.number>2.0.2</phpmaven.release.number>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <phpunit.version>3.6.10</phpunit.version>
+    </properties>
+
+    <groupId>net.webdropzone.wdz</groupId>
+    <artifactId>wdzGalerie</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>php</packaging>
+
+    <name>wdzGalerie</name>
+    <description>Galerie HTML</description>
+    <url>http://screenshots.webdropzone.net</url>
+    <inceptionYear>2012</inceptionYear>
+
+    <build>
+        <plugins>
+        	<plugin>
+                <groupId>org.phpmaven</groupId>
+                <artifactId>maven-php-plugin</artifactId>
+                <version>${phpmaven.plugin.version}</version>
+                
+                <configuration>
+                </configuration>
+            </plugin>
+            
+            <!-- <plugin>
+                <groupId>org.sample</groupId>
+                <artifactId>own-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <extensions>true</extensions>
+            </plugin> -->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.0</version>
+                <inherited>true</inherited>
+                <configuration>
+                    <reportPlugins>
+                        <plugin>
+                            <groupId>org.phpmaven</groupId>
+                            <artifactId>maven-php-plugin</artifactId>
+                            <version>${phpmaven.plugin.version}</version>
+                            <reportSets>
+                                <reportSet>
+                                    <reports>
+                                        <report>phpdocumentor</report>
                                         <report>phpunit-coverage</report>
                                         <report>phpunit</report>
-									</reports>
-								</reportSet>
-							</reportSets>
-						</plugin>
-					</reportPlugins>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+                                    </reports>
+                                </reportSet>
+                            </reportSets>
+                        </plugin>
+                    </reportPlugins>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.phpunit</groupId>
+            <artifactId>PHPUnit</artifactId>
+            <version>${phpunit.version}</version>
+            <scope>test</scope>
+            <type>phar</type>
+        </dependency>
+    </dependencies>
 
 
-	<dependencies>
-		<!--  phpUnit for PHP 5 -->
-		<dependency>
-			<groupId>de.phpunit</groupId>
-			<artifactId>phpunit</artifactId>
-			<version>3.6.10</version>
-		</dependency>
-
-	</dependencies>
 </project>
