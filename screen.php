@@ -16,14 +16,18 @@ $galleryName = $_REQUEST['galleryname'];
 <script src="js/coreGallery.js"></script>
 
 	<script>
-		$(document).ready(function(){
-			initSlideShow();
-			$( "#retour" ).button();
-			$( "#retour" ).click(function( event ) {
-				$(location).attr('href','index.php');
-				event.preventDefault();
-			});
+	$(document).ready(function(){
+		initSlideShow();
+		updateSize();	
+		$( "#retour" ).button();
+		$( "#retour" ).click(function( event ) {
+			$(location).attr('href','index.php');
+			event.preventDefault();
 		});
+		$(window).resize(function() {
+			updateSize();
+		});
+	});
 
 		</script>
 	</head>

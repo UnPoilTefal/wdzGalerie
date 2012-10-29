@@ -7,7 +7,7 @@ class ConfigEnv{
 	
 	function __construct(){
 		$server_root = $_SERVER['DOCUMENT_ROOT'];
-		$gallery_root = $server_root . '/galeries';
+		$gallery_root = $server_root . '/Galerie/galeries';
 		
 		$this->web_url='galeries';
 		$this->file_url= $gallery_root;

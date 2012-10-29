@@ -10,7 +10,7 @@ a img {
   	text-align: center;
   	line-height:112px;
 	border:1px solid #595959;
-	margin: 6px 6px;
+	margin: 3px 3px;
 	padding: 1px;
 	background-color:#000;
 }
@@ -71,7 +71,7 @@ body{
 	min-height:220px;
 	list-style-type: none;
 	margin: 0 auto;
-	padding: 5px;
+	padding: 3px;
 }
 #message {
 	top: 0;
