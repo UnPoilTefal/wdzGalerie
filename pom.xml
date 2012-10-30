@@ -9,7 +9,6 @@
     </parent>
     
     <properties>
-        <phpmaven.release.number>2.0.2</phpmaven.release.number>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <phpunit.version>3.6.10</phpunit.version>
     </properties>
@@ -26,22 +25,7 @@
 
     <build>
         <plugins>
-        	<plugin>
-                <groupId>org.phpmaven</groupId>
-                <artifactId>maven-php-plugin</artifactId>
-                <version>${phpmaven.plugin.version}</version>
-                
-                <configuration>
-                </configuration>
-            </plugin>
-            
-            <!-- <plugin>
-                <groupId>org.sample</groupId>
-                <artifactId>own-plugin</artifactId>
-                <version>1.0-SNAPSHOT</version>
-                <extensions>true</extensions>
-            </plugin> -->
-
+           
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
@@ -52,7 +36,6 @@
                         <plugin>
                             <groupId>org.phpmaven</groupId>
                             <artifactId>maven-php-plugin</artifactId>
-                            <version>${phpmaven.plugin.version}</version>
                             <reportSets>
                                 <reportSet>
                                     <reports>
