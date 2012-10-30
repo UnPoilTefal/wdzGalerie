@@ -19,20 +19,9 @@ class GalleryContentTest extends PHPUnit_Framework_TestCase
     {
     	umask(0777);
     	$this->testGalleryName = 'test';
-    	$configEnv = new ConfigEnv();
-    	$gallery_path = $configEnv->getFileUrl() . "/" . $this->testGalleryName;
-    	if(!file_exists($gallery_path . '/images')) {
-    		mkdir($gallery_path . '/images', 0777, TRUE);
-    	}
-    	if(!file_exists($gallery_path . '/thumbs')) {
-    		mkdir($gallery_path . '/thumbs', 0777, TRUE);
-    	}
+    	$configEnv = new ConfigEnv();   	
     	
-    	
-    	$xmlGallery = new XmlGallery();
-    	$xmlGallery->generateXml($this->testGalleryName);
-    	
-    	$this->object = new GalleryContent($this->testGalleryName);
+    	$this->object = new GalleryContent($this->testGalleryName, TRUE);
     }
 
     /**
@@ -40,14 +29,14 @@ class GalleryContentTest extends PHPUnit_Framework_TestCase
      * This method is called after a test is executed.
      */
     protected function tearDown()
-    {/*
-    	umask(0777);
+    {
+    	
     	$configEnv = new ConfigEnv();
     	$gallery_path = $configEnv->getFileUrl() . "/" . $this->testGalleryName;
     	rmdir($gallery_path . '/images');
     	rmdir($gallery_path . '/thumbs');
     	 
-    	$this->delDir($gallery_path);*/
+    	$this->delDir($gallery_path);
     }
 
     /**
