@@ -1,7 +1,7 @@
 <?php
 function __autoload($className) {
 	$pathLib = __DIR__ . '/../application/classes/';
-    $file = $class . '.php';
+    $file = $className . '.php';
     if (file_exists($pathLib. $file)) {
         require $pathLib . $file;
     } 
