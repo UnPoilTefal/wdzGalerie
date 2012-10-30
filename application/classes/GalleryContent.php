@@ -121,8 +121,8 @@ class GalleryContent {
 			$captionElem = $imageElem->appendChild($thumbElem);
 			
 			if(!file_exists($this->getFileThumbsDirectory() . $filename)) {
-				/*$this->imagethumb($filename,'',150);*/
-				throw new Exception("Les miniatures doivent Ãªtre initialisÃ©es.");
+				$this->imagethumb($filename,'',150);
+				/*throw new Exception("Les miniatures doivent être initialisées.");*/
 			}
 			
 			$this->nb_existing_images ++;

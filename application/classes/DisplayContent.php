@@ -69,7 +69,7 @@ class DisplayContent {
 			}
 				
 		} catch (Exception $e) {
-			return "<div>Cette galerie ne peut Ãªtre affichÃ© pour le moment : " . $e->getMessage() ."</div>";
+			return "<div>Cette galerie ne peut être affiché pour le moment : " . $e->getMessage() ."</div>";
 			
 		}
 		
