@@ -3,7 +3,6 @@ class XmlGallery {
 
 	private $allowed_types;
 	
-	
 	function __construct(){
 		
 		$this->allowed_types = array('png','jpg','jpeg','gif'); //Allowed types of files
@@ -11,9 +10,10 @@ class XmlGallery {
 	}
 	
 	function generateXml($galleryName) {
+		umask(0777);
 		try {
 			$configEnv = new ConfigEnv();
-			$exportDoc = new GalleryContent($galleryName);
+			$exportDoc = new GalleryContent($galleryName,TRUE);
 			
 			$imagesNodeList = $exportDoc->getImages()->getElementsByTagName('image');
 			$newimageorder = $exportDoc->getNbExistingImages();
@@ -51,12 +51,12 @@ class XmlGallery {
 				}
 					
 			}
-				
+			
+			echo 'Ecrit : ' . $exportDoc->save() . ' bytes';
+			
 		} catch (Exception $e) {
 			echo "<div>Erreur lors de l'initialisation de la galerie : " . $e->getMessage() ."</div>";
 		}
-		
-		echo 'Ecrit : ' . $exportDoc->save() . ' bytes';		
 		
 	}
 	

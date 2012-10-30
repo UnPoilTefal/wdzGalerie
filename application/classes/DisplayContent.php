@@ -69,7 +69,7 @@ class DisplayContent {
 			}
 				
 		} catch (Exception $e) {
-			return "<div>Cette galerie ne peut être affiché pour le moment : " . $e->getMessage() ."</div>";
+			return '<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Cette galerie ne peut etre affiche pour le moment : </strong>' . $e->getMessage() . '</p></div>';
 			
 		}
 		

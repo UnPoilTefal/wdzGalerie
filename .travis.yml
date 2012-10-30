@@ -3,6 +3,7 @@ language: php
 
 branches:
   only:
+    - master
     - structure_CI
 
 # list any PHP version you want to test against

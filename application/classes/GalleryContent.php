@@ -11,12 +11,26 @@ class GalleryContent {
 	private $root;
 	private $images;
 	private $nb_existing_images;
+	private $initMode;
 	
-	function __construct($galleryName){
+	function __construct($galleryName, $iInitMode = FALSE){
+		umask(0777);
+		$this->initMode = $iInitMode;
+		
 		if($galleryName == '') {
-			throw new Exception("Le nom d'une galerie ne peut ï¿½tre vide!");
+			throw new Exception("Le nom d'une galerie ne peut etre vide!");
 		}
+
 		$configEnv = new ConfigEnv();
+		
+		if (!file_exists($configEnv->getFileUrl() . '/' . $galleryName)) {
+			if($this->initMode) {
+				mkdir($configEnv->getFileUrl() . '/' . $galleryName);
+			} else {
+				throw new Exception("La galerie " . $galleryName . " n'existe pas! (". $configEnv->getFileUrl() . '/' . $galleryName .")");
+			}
+		}
+		
 		$this->gallery_name = $galleryName;
 		$this->file_images_directory = $configEnv->getFileUrl() . '/' . $galleryName . '/images/';
 		$this->file_thumbs_directory = $configEnv->getFileUrl() . '/' . $galleryName . '/thumbs/';
@@ -27,11 +41,30 @@ class GalleryContent {
 		$this->nb_existing_images = 0;
 		
 		$this->initDocument();
+		
+		if (!file_exists($this->getFileImagesDirectory())) {
+			if($this->initMode) {
+				if (@mkdir($this->getFileImagesDirectory()) === false) {
+					throw new Exception("Echec de creation du repertoire des images. " . $this->getFileImagesDirectory());
+				}
+			} else {
+				throw new Exception("Le repertoire des images n'existe pas !" . $this->getFileImagesDirectory());
+			}
+		}
+		
 		if (!file_exists($this->getFileThumbsDirectory())) {
-			mkdir($this->getFileThumbsDirectory());
+			if($this->initMode) {
+				if(@mkdir($this->getFileThumbsDirectory(),TRUE) === false) {
+					throw new Exception("Echec de creation du repertoire des miniatures. " . $this->getFileThumbsDirectory());
+				}
+			} else {
+				throw new Exception("Le repertoire de miniature n'existe pas !");
+			}
 		}
 		if (file_exists($this->xml_url)) {
 			$this->initExistingDoc();
+		} else if (!$this->initMode) {
+			throw new Exception("La galerie n'a pas encore ete initialisee.");
 		}
 		
 	}
@@ -121,16 +154,20 @@ class GalleryContent {
 			$captionElem = $imageElem->appendChild($thumbElem);
 			
 			if(!file_exists($this->getFileThumbsDirectory() . $filename)) {
-				$this->imagethumb($filename,'',150);
-				/*throw new Exception("Les miniatures doivent être initialisées.");*/
+				if($this->initMode) {
+					$this->imagethumb($filename,'',220);
+				} else {
+					throw new Exception("Les miniatures doivent être initialisées.");
+				}
+				
 			}
 			
 			$this->nb_existing_images ++;
 		
 		} else {
-			if(file_exists($this->getFileThumbsDirectory() . $filename)) {
+			if(file_exists($this->getFileThumbsDirectory() . $filename) && $this->initMode) {
 				if(@unlink($this->getFileThumbsDirectory() . $filename) === false) {
-					echo "Echec Suppression " . $filename . "<br/>";
+					throw new Exception("Echec de suppression de " . $filename);
 				}
 			}
 		}
@@ -138,6 +175,7 @@ class GalleryContent {
 	
 	function save() {
 		return $this->document->save($this->xml_url);
+		chmod($this->xml_url, 0755);
 	}
 	
 	private function sort_by_order_attr($a, $b)	{
@@ -173,7 +211,11 @@ class GalleryContent {
 			}
 		}
 	}
-	
+	/**
+	 * 
+	 * @param unknown_type $imageNode
+	 * @return multitype:multitype:unknown NULL
+	 */
 	private function getImageArrayFromImageNode($imageNode) {
 	
 		$lst_images = array();
@@ -193,7 +235,16 @@ class GalleryContent {
 		}
 		return $lst_images;
 	}
-
+	
+	/**
+	 * Création de la miniature d'une image
+	 * @param unknown_type $image_src
+	 * @param unknown_type $image_dest
+	 * @param unknown_type $max_size
+	 * @param unknown_type $expand
+	 * @param unknown_type $square
+	 * @return boolean
+	 */
 	function imagethumb( $image_src , $image_dest = NULL , $max_size = 100, $expand = FALSE, $square = FALSE ) {
 		$image_dest = $this->getFileThumbsDirectory(). $image_src;
 		$image_src = $this->getFileImagesDirectory(). $image_src;
