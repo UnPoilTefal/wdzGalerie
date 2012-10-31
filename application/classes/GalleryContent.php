@@ -12,6 +12,7 @@ class GalleryContent {
 	private $images;
 	private $nb_existing_images;
 	private $initMode;
+	private $configEnv;
 	
 	function __construct($galleryName, $iInitMode = FALSE){
 		
@@ -21,52 +22,34 @@ class GalleryContent {
 			throw new Exception("Le nom d'une galerie ne peut etre vide!");
 		}
 
-		$configEnv = new ConfigEnv();
+		$this->configEnv = new ConfigEnv();
 		
-		if (!file_exists($configEnv->getFileUrl() . '/' . $galleryName)) {
-			if($this->initMode) {
-				@mkdir($configEnv->getFileUrl() . '/' . $galleryName);
-				
-			} else {
-				throw new Exception("La galerie " . $galleryName . " n'existe pas! (". $configEnv->getFileUrl() . '/' . $galleryName .")");
-			}
-		}
-		chmod($configEnv->getFileUrl() . '/' . $galleryName, 0777);
+		chmod($this->configEnv->getFileUrl() . '/' . $galleryName, 0777);
 		$this->gallery_name = $galleryName;
-		$this->file_images_directory = $configEnv->getFileUrl() . '/' . $galleryName . '/images/';
-		$this->file_thumbs_directory = $configEnv->getFileUrl() . '/' . $galleryName . '/thumbs/';
-		$this->web_images_directory = $configEnv->getWebUrl() . '/' . $galleryName . '/images/';
-		$this->web_thumbs_directory = $configEnv->getWebUrl() . '/' . $galleryName . '/thumbs/';
-		$this->xml_url = $configEnv->getFileUrl() . '/' . $galleryName . '/' . $galleryName.'GalleryContent.xml';
+		$this->file_images_directory = $this->configEnv->getFileUrl() . '/' . $galleryName . '/images/';
+		$this->file_thumbs_directory = $this->configEnv->getFileUrl() . '/' . $galleryName . '/thumbs/';
+		$this->web_images_directory = $this->configEnv->getWebUrl() . '/' . $galleryName . '/images/';
+		$this->web_thumbs_directory = $this->configEnv->getWebUrl() . '/' . $galleryName . '/thumbs/';
+		$this->xml_url = $this->configEnv->getFileUrl() . '/' . $galleryName . '/' . $galleryName.'GalleryContent.xml';
 		
 		$this->nb_existing_images = 0;
-		
+
+		/*
+		 * Création d'un fichier xml structure
+		 */
 		$this->initDocument();
 		
-		if (!file_exists($this->getFileImagesDirectory())) {
-			if($this->initMode) {
-				if (!@mkdir($this->getFileImagesDirectory(),0777,true)) {
-					$error = error_get_last();
-					throw new Exception("Echec de creation du repertoire des images. " . $error['message']);
-				}
-			} else {
-				throw new Exception("Le repertoire des images n'existe pas !" . $this->getFileImagesDirectory());
-			}
-		}
+		/*
+		 *  Controle et création
+		 */
+		$this->controleAndCreation();
 		
-		if (!file_exists($this->getFileThumbsDirectory())) {
-			if($this->initMode) {
-				if(!@mkdir($this->getFileThumbsDirectory(),0777,TRUE)) {
-					$error = error_get_last();
-					throw new Exception("Echec de creation du repertoire des miniatures. " . $error['message']);
-				}
-			} else {
-				throw new Exception("Le repertoire de miniature n'existe pas !");
-			}
-		}
-		if (file_exists($this->xml_url)) {
+		if (file_exists($this->xml_url) && !$this->initMode) {
+			chmod($this->xml_url, 0777);
 			$this->initExistingDoc();
-		} else if (!$this->initMode) {
+		} else if ($this->initMode) {
+			//TODO Inclure l'initialisation de la galerie ici
+		} else {
 			throw new Exception("La galerie n'a pas encore ete initialisee.");
 		}
 		
@@ -179,7 +162,7 @@ class GalleryContent {
 	
 	function save() {
 		return $this->document->save($this->xml_url);
-		chmod($this->xml_url, 0755);
+		chmod($this->xml_url, 0777);
 	}
 	
 	private function sort_by_order_attr($a, $b)	{
@@ -371,7 +354,50 @@ class GalleryContent {
 	
 		return TRUE;
 	}
-	
+	function controleAndCreation() {
+
+		/*
+		 * Répertoire principale de la galerie
+		 */
+		if (!file_exists($this->configEnv->getFileUrl() . '/' . $this->getGalleryName())) {
+			if($this->initMode) {
+				@mkdir($this->configEnv->getFileUrl() . '/' . $this->getGalleryName());
+			} else {
+				throw new Exception("La galerie " . $galleryName . " n'existe pas! (". $this->configEnv->getFileUrl() . '/' . $this->getGalleryName() .")");
+			}
+		}
+		
+		/*
+		 * Répertoire des images de la galerie
+		 */
+		if (!file_exists($this->getFileImagesDirectory())) {
+			if($this->initMode) {
+				if (!@mkdir($this->getFileImagesDirectory(),0777,true)) {
+					$error = error_get_last();
+					throw new Exception("Echec de creation du repertoire des images. " . $error['message']);
+				} 
+			} else {
+				throw new Exception("Le repertoire des images n'existe pas !" . $this->getFileImagesDirectory());
+			}
+		}
+		
+		/*
+		 * Répertoire de miniatures de la galerie
+		 */
+		if (!file_exists($this->getFileThumbsDirectory())) {
+			if($this->initMode) {
+				if(!@mkdir($this->getFileThumbsDirectory(),0777,TRUE)) {
+					$error = error_get_last();
+					throw new Exception("Echec de creation du repertoire des miniatures. " . $error['message']);
+				}
+			} else {
+				throw new Exception("Le repertoire de miniature n'existe pas !");
+			}
+		}
+		
+		/******************************/
+		
+	}
 }
 
 ?>

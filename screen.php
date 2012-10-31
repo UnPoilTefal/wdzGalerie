@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <?php require_once 'application/classes/init.php';
+$dispContent = new DisplayContent();
 $galleryName = $_REQUEST['galleryname'];
 ?>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
