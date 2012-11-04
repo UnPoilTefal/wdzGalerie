@@ -1,5 +1,5 @@
 		<div id="main">
-		<ul id="container" ><li>Contenue de la galerie</li>
+		<ul id="container" ><?=$this->displaycontent->displayGallery($galleryname); ?>
 		</ul>
 		<div id="footer">
 			<button id="retour">Retour</button>

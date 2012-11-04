@@ -56,7 +56,7 @@ if (defined('ENVIRONMENT'))
  * as this file.
  *
  */
-	$system_path = '../libs/sys';
+	$system_path = '/home/unpoiltefal/git/wdzGalerie/libs/sys';
 
 /*
  *---------------------------------------------------------------
@@ -72,7 +72,7 @@ if (defined('ENVIRONMENT'))
  * NO TRAILING SLASH!
  *
  */
-	$application_folder = '../libs/app';
+	$application_folder = '/home/unpoiltefal/git/wdzGalerie/libs/app';
 
 /*
  * --------------------------------------------------------------------
