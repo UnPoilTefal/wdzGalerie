@@ -10,7 +10,7 @@ class XmlGallery {
 	}
 	
 	function generateXml($galleryName) {
-		umask(0777);
+		
 		try {
 			$configEnv = new ConfigEnv();
 			$exportDoc = new GalleryContent($galleryName,TRUE);
