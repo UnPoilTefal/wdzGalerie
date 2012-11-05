@@ -1,16 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<?php require_once 'application/classes/init.php';
-$dispContent = new DisplayContent();
-$galleryName = $_REQUEST['galleryname'];
-?>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link href="css/design.css" type="text/css" rel="stylesheet"></link>
-<link href="css/ui-gallery/jquery-ui-1.9.0.custom.min.css" rel="stylesheet">
-<script src="http://code.jquery.com/jquery.js"></script>
-<script src="http://code.jquery.com/ui/1.9.0/jquery-ui.js"></script>
-
 <script type="text/javascript">
 	$(document).ready(function(){
 
@@ -27,7 +14,7 @@ $galleryName = $_REQUEST['galleryname'];
 		$('#container').disableSelection();
 		$( "#retour" ).button();
 		$( "#retour" ).click(function( event ) {
-			$(location).attr('href','index.php');
+			$(location).attr('href','<?=base_url(index_page());?>');
 			event.preventDefault();
 		});
 
@@ -46,16 +33,18 @@ $galleryName = $_REQUEST['galleryname'];
 			var erreur = '<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Gallery status :</strong> Error during sort action.</p></div>';
 			var shortorder = {
 					images : items,
-					galleryname : '<?=$galleryName?>'
+					galleryname : '<?=$galleryname?>'
 			};
 			$.ajax({
-				url : 'application/classes/SortGalerie.php',
+				url : '<?php echo base_url().'admin/sort_galerie';?>',
 				async : false,
 				data : shortorder,
 				dataType : "html",
 				type : "POST",
 				success : function(html) {
+					alert(html);
 					$("#results").html(html).delay(3000).fadeOut();
+					
 				},
 				error: function(){  
 					$("#results").html(erreur).delay(3000).fadeOut();
@@ -66,17 +55,10 @@ $galleryName = $_REQUEST['galleryname'];
 		
 	});	
 </script>
-</head>
-<body>
-	<div id="message">
-		<div id="results" class="ui-widget"></div>
-	</div>
 	<div id="main">
-	<ul id="container" ><?=$dispContent->displaySortGallery($galleryName); ?></ul>
+	<ul id="container" ><?=$this->displaycontent->displaySortGallery($galleryname); ?></ul>
 	<div id="footer">
 		<button id="retour">Retour</button>
 	</div>
 	<br class="clear"/>
 	</div>
-</body>
-</html>

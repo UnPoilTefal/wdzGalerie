@@ -14,21 +14,6 @@ echo link_tag('css/ui-gallery/jquery-ui-1.9.0.custom.min.css');
 <script src="<?php echo base_url('js/jquery.fullscreenslides.js')?>"></script>
 <script src="<?php echo base_url('js/coreGallery.js')?>"></script>
 
-	<script>
-	$(document).ready(function(){
-		initSlideShow();
-		updateSize();	
-		$( "#retour" ).button();
-		$( "#retour" ).click(function( event ) {
-			$(location).attr('href','<?=base_url(index_page());?>');
-			event.preventDefault();
-		});
-		$(window).resize(function() {
-			updateSize();
-		});
-	});
-
-		</script>
 	</head>
 
 	<body>

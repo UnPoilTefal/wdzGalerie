@@ -86,9 +86,6 @@ class Displaycontent {
 	}
 	function displaySortGallery($galleryName) {
 	
-		$params = array('galleryname'=>$galleryName);
-		$this->CI->load−>library('GalleryContent', $params);
-		
 		$sHtml = '';
 		try {
 			$displayDoc = $this->CI->gallerycontent;
@@ -117,14 +114,14 @@ class Displaycontent {
 						$sCaption = $captionNode->nodeValue;
 					}
 			
-					$sHtml = $sHtml . "<li class='image dragbox'><img src='" . $sThumb . "' class='fade' rel='" . $sFilename . "'/></li>";
+					$sHtml = $sHtml . "<li class='image dragbox'><img src='" . base_url($sThumb) . "' class='fade' rel='" . $sFilename . "'/></li>";
 			
 				}
 			
 			}
 				
 		} catch (Exception $e) {
-			
+			return '<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Cette galerie ne peut etre affiche pour le moment : </strong>' . $e->getMessage() . '</p></div>';
 			
 		}
 		return $sHtml;

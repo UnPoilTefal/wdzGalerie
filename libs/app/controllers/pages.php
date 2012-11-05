@@ -10,7 +10,11 @@ class Pages extends CI_Controller {
 		
 		$params = array('galleryname' => $galleryName, 'initmode' => FALSE);
 		
-		$this->load->library('gallerycontent', $params);
+		try {
+			$this->load->library('gallerycontent', $params);
+		} catch (Exception $e) {
+			show_error($e->getMessage());
+		}
 		
 		$data['title'] = ucfirst($galleryName); // Capitalize the first letter
 		$data['galleryname'] = $galleryName;

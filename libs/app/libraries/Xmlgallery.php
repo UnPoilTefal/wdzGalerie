@@ -1,19 +1,20 @@
 <?php
-class XmlGallery {
+class Xmlgallery {
 
 	private $allowed_types;
+	private $CI;
 	
 	function __construct(){
 		
 		$this->allowed_types = array('png','jpg','jpeg','gif'); //Allowed types of files
-		
+		$this->CI =& get_instance();
 	}
 	
 	function generateXml($galleryName) {
 		
 		try {
-			$configEnv = new ConfigEnv();
-			$exportDoc = new GalleryContent($galleryName,TRUE);
+			
+			$exportDoc = $this->CI->gallerycontent;
 			
 			$imagesNodeList = $exportDoc->getImages()->getElementsByTagName('image');
 			$newimageorder = $exportDoc->getNbExistingImages();
@@ -52,10 +53,10 @@ class XmlGallery {
 					
 			}
 			
-			echo 'Ecrit : ' . $exportDoc->save() . ' bytes';
+			return 'Ecrit : ' . $exportDoc->save() . ' bytes';
 			
 		} catch (Exception $e) {
-			echo "<div>Erreur lors de l'initialisation de la galerie : " . $e->getMessage() ."</div>";
+			return "Erreur lors de l'initialisation de la galerie : " . $e->getMessage();
 		}
 		
 	}
@@ -75,6 +76,33 @@ class XmlGallery {
 		}
 		
 		return $lst_imgfromdir;
+		
+	}
+	
+	function sortGallery($galleryname, $data) {
+		
+		try {
+			$exportDoc = $this->CI->gallerycontent;
+			$imagesNodeList = $exportDoc->getImages()->getElementsByTagName('image');
+			
+			foreach ($imagesNodeList as $existingImage) {
+			
+				foreach($data as $image){
+					$filename = $image['id'];
+					$order = $image['order'];
+			
+					if ($existingImage->getAttribute('filename') == $filename) {
+						$existingImage->setAttribute('order', $order);
+					}
+			
+				}
+			
+			}
+			$exportDoc->save();
+				
+		} catch (Exception $e) {
+			throw new Exception('Erreur lors du traitement : Xmlgallery->sortGallery');
+		}
 		
 	}
 	

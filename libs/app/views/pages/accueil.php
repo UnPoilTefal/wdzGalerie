@@ -31,7 +31,7 @@ if ($handle = opendir('./galeries'))
 echo "<div><span>Initialisation des fichiers XML :</span></div><ul>";
 foreach ($contenu_galeries as $nom_gallery) {
 
-	echo "<li><a href='pages/admin/" . $nom_gallery . "/action/refreshxml/'>Initialisation de " . $nom_gallery . "</a></li>";
+	echo "<li><a href='admin/init/" . $nom_gallery . "'>Initialisation de " . $nom_gallery . "</a></li>";
 	
 
 }
@@ -39,7 +39,7 @@ echo "</ul>";
 echo "<div><span>Organisation des images :</span></div><ul>";
 foreach ($contenu_galeries as $nom_gallery) {
 
-	echo "<li><a href='/pages/sort/" . $nom_gallery . "'>Organisation de " . $nom_gallery . "</a></li>";
+	echo "<li><a href='/admin/sort/" . $nom_gallery . "'>Organisation de " . $nom_gallery . "</a></li>";
 	
 
 }
