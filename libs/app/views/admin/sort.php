@@ -1,6 +1,10 @@
 <script type="text/javascript">
 	$(document).ready(function(){
-
+		updateSize();	
+		$(window).resize(function() {
+			updateSize();
+		});
+	
 		$('#container').sortable({
 			handle: 'img',
 			cursor : 'move',
