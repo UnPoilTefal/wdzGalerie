@@ -33,16 +33,15 @@
 			var erreur = '<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Gallery status :</strong> Error during sort action.</p></div>';
 			var shortorder = {
 					images : items,
-					galleryname : '<?=$galleryname?>'
+					galleryname : '<?php echo $galleryname; ?>'
 			};
 			$.ajax({
-				url : '<?php echo base_url().'admin/sort_galerie';?>',
+				url : '<?php echo base_url(index_page() . '/admin/sort_galerie');?>',
 				async : false,
 				data : shortorder,
 				dataType : "html",
 				type : "POST",
 				success : function(html) {
-					alert(html);
 					$("#results").html(html).delay(3000).fadeOut();
 					
 				},

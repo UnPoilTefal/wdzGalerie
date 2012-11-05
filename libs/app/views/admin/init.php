@@ -11,7 +11,7 @@
 </script>
 
 <div id="main">
-	<div>Fichier généré : <?= $result ?></div>
+	<div class='.ui-widget-content'>Initialisation de la galerie : <?php echo $result; ?></div>
 	<div id="footer">
 		<button id="retour">Retour</button>
 	</div>

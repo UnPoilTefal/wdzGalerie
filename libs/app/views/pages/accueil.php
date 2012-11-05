@@ -31,30 +31,18 @@ if ($handle = opendir('./galeries'))
 echo "<div><span>Initialisation des fichiers XML :</span></div><ul>";
 foreach ($contenu_galeries as $nom_gallery) {
 
-	echo "<li><a href='admin/init/" . $nom_gallery . "'>Initialisation de " . $nom_gallery . "</a></li>";
-	
+	echo "<li><a href='" . base_url(index_page() . '/admin/init/' . $nom_gallery) . "'>Initialisation de " . $nom_gallery . "</a></li>";
 
 }
 echo "</ul>";
 echo "<div><span>Organisation des images :</span></div><ul>";
 foreach ($contenu_galeries as $nom_gallery) {
 
-	echo "<li><a href='/admin/sort/" . $nom_gallery . "'>Organisation de " . $nom_gallery . "</a></li>";
-	
+	echo "<li><a href='" . base_url(index_page() . '/admin/sort/' . $nom_gallery) . "'>Organisation de " . $nom_gallery . "</a></li>";
 
 }
 echo "</ul>"
 ?>
-<?php
-/*
- if(isset($_REQUEST['action']) AND $_REQUEST['action'] == 'refreshxml') {
-	$galleryName = $_REQUEST['galleryname'];
-	$xmlGal = new XmlGallery();
-	echo "<div>" . $xmlGal->generateXml($galleryName) . "</div>";
-}	*/
-?>
-	
-	
 	
 	</div>
 </div>
