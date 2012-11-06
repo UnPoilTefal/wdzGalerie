@@ -8,9 +8,12 @@ branches:
 
 # list any PHP version you want to test against
 php:
-  # using major version aliases
-
-  # aliased to 5.2.17
-  - 5.2
   - 5.3
   - 5.4
+
+before_script:
+  - curl -s http://getcomposer.org/installer | php
+  - php composer.phar install
+
+script: phpunit --coverage-text --configuration tests/phpunit.xml
+  
