@@ -49,8 +49,6 @@ class Admin extends CI_Controller {
 	}
 	
 	public function sort_galerie() {
-		//restore the error_handler to default php
-		restore_error_handler();
 		
 		try {
 		$data = $_POST['images'];
@@ -74,9 +72,25 @@ class Admin extends CI_Controller {
 			echo '<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Gallery status :</strong> Error during sort action.' . $e->getPrevious()->getMessage() . '</p></div>';
 		}
 		
-		//set it back to CI error_handler
-		set_error_handler('_exception_handler');
 	}
 	
+	public function accueil() {
+	
+		$this->load->helper('html');
+		$this->load->helper('url');
+	
+		//$this->load->library('displaycontent');
+		$this->load->model('gallery_model_xml');
+		$data['lst_galeries'] = $this->gallery_model_xml->get_list_galeries();
+		
+		$data['title'] = ucfirst('accueil'); // Capitalize the first letter
+	
+		$this->load->view('templates/global/header', $data);
+		$this->load->view('admin/accueil', $data);
+		$this->load->view('templates/global/footer', $data);
+		$this->load->view('templates/global/script', $data);
+		$this->load->view('templates/global/bottom', $data);
+			
+	}
 	
 }

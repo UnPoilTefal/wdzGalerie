@@ -218,7 +218,7 @@ class Gallerycontent {
 			}
 			$lst_thumb = $n->getElementsByTagName('thumb');
 			foreach ($lst_thumb as $thumb) {
-				$imagecontent['thumb'] = $thumb->nodeValue;
+				$imagecontent['thumb'] = $thumb;
 			}
 			$lst_images[] = $imagecontent;
 		}

@@ -1,7 +1,7 @@
 function initSlideShow() {
 
   // initialize the slideshow
-  $('.image img').fullscreenslides();
+  $('.thumbnails img').fullscreenslides();
   
   // All events are bound to this container element
   var $container = $('#fullscreenSlideshowContainer');

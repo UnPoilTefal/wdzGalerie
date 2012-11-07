@@ -1,48 +1,20 @@
-<script>
-	$(function() {
-		$( "#tabs" ).tabs();
-	});
-</script>
+        <div class="container">
 
-<div id="tabs">
-	<ul>
-		<li><a href="#tabs-1">Affichage</a></li>
-		<li><a href="#tabs-2">Administration</a></li>
-	</ul>
-	<div id="tabs-1"><?=$this->displaycontent->displayListGallery(); ?></div>
-	<div id="tabs-2">
-	
-	<?php 
+            <!-- Main hero unit for a primary marketing message or call to action -->
+            <div class="hero-unit">
+                <h1>Liste des galeries</h1>
+                <p>Liste des galeries disponibles.</p>
+                <p><a class="btn btn-primary btn-large">En savoir plus &raquo;</a></p>
+            </div>
 
-if ($handle = opendir('./galeries'))
-{
-	$contenu_galeries=array();
-	$cpt=0;
-	while (false !== ($file = readdir($handle)))
-	{
-		if($file != "." && $file != ".." ){
-			if(is_dir('./galeries' . '/' .$file))
-				$contenu_galeries[$cpt]=$file;
-		}
-		$cpt++;
-	}
-	closedir($handle);
-}
-echo "<div><span>Initialisation des fichiers XML :</span></div><ul>";
-foreach ($contenu_galeries as $nom_gallery) {
-
-	echo "<li><a href='" . base_url(index_page() . '/admin/init/' . $nom_gallery) . "'>Initialisation de " . $nom_gallery . "</a></li>";
-
-}
-echo "</ul>";
-echo "<div><span>Organisation des images :</span></div><ul>";
-foreach ($contenu_galeries as $nom_gallery) {
-
-	echo "<li><a href='" . base_url(index_page() . '/admin/sort/' . $nom_gallery) . "'>Organisation de " . $nom_gallery . "</a></li>";
-
-}
-echo "</ul>"
-?>
-	
-	</div>
-</div>
+            <!-- Example row of columns -->
+            <div class="row">
+	            <?php foreach ($lst_galeries as $galerie):?>
+	                <div class="span4">
+	                    <h2><?php echo $galerie; ?></h2>
+	                    <p>Affichage de la galerie <?php echo $galerie; ?></p>
+	                    <p><img src="http://placehold.it/210x110" class="img-polaroid"></p>
+	                    <p><?php echo "<a class='btn' href='" . base_url(index_page() . '/pages/view/' . $galerie) . "'>Afficher &raquo;</a>"; ?></p>
+	                </div>
+	            <?php endforeach;?>
+            </div>

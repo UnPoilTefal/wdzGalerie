@@ -38,6 +38,7 @@
 |
 */
 $route['admin/sort/(:any)'] = "admin/sort/$1";
+$route['admin'] = "admin/accueil";
 $route['admin'] = 'admin';
 
 $route['pages/view/(:any)'] = "pages/view/$1";
