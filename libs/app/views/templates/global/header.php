@@ -13,6 +13,7 @@
 		echo link_tag('css/global/bootstrap.min.css');
 		echo link_tag('css/global/bootstrap-responsive.min.css');
 		echo link_tag('css/global/main.css');
+		echo link_tag('css/fullscreenstyle.css');
 		?>
 		<script src="<?php echo base_url('js/global/modernizr-2.6.1-respond-1.1.0.min.js')?>"></script>
 	</head>
