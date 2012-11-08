@@ -77,13 +77,13 @@ class Gallery_model_xml extends CI_Model {
 	
 	public function check_status_gallery($gallery_name) {
 		
-		$check_lst = array('gallery_dir' => FALSE, 'images_dir' => FALSE, 'thumb_dir' => FALSE, 'gallery_xml_file_exists' => FALSE, 'thumb_files_ok' => FALSE);
+		$check_lst = array('gallery_dir' => FALSE, 'images_dir' => FALSE, 'thumbs_dir' => FALSE, 'gallery_xml_file_exists' => FALSE, 'thumb_files_ok' => FALSE);
 		
 		$check_lst['gallery_dir'] = $this->is_gallery_dir_exists($gallery_name);
-		$check_lst['images_dir'] = TRUE; //TODO add check method
-		$check_lst['thumb_dir'] = TRUE; //TODO add check method
-		$check_lst['gallery_xml_file_exists'] = TRUE; //TODO add check method
-		$check_lst['thumb_files_ok'] = TRUE; //TODO add check method
+		$check_lst['images_dir'] = $this->is_images_dir_exists($gallery_name);
+		$check_lst['thumbs_dir'] = $this->is_thumbs_dir_exists($gallery_name);
+		$check_lst['gallery_xml_file_exists'] = $this->is_gallery_xml_file_exists($gallery_name);
+		$check_lst['thumb_files_ok'] = array('mandatory'=>FALSE,'status'=>FALSE); //TODO add check method
 		
 		return $check_lst;
 	}
@@ -92,9 +92,9 @@ class Gallery_model_xml extends CI_Model {
 		
 		$gallery_status = TRUE;
 		$chk_lst = $this->check_status_gallery($gallery_name);
-		foreach ($chk_lst as $current_status) {
+		foreach ($chk_lst as $k=>$current_status) {
 			
-			if($current_status === FALSE) {
+			if($current_status['mandatory'] === TRUE && $current_status['status'] === FALSE) {
 				$gallery_status = FALSE;
 				break;
 			}
@@ -128,13 +128,49 @@ class Gallery_model_xml extends CI_Model {
 	}
 	private function is_gallery_dir_exists($gallery_name) {
 		
-		$status = FALSE;
+		$value = array('mandatory'=>TRUE,'status'=>FALSE);
 		
 		if(file_exists('./galeries/' . $gallery_name)) {
-			$status = TRUE;
+			$value['status'] = TRUE;
 		}
 		
-		return $status;
+		return $value;
 		
 	}
+	
+	private function is_images_dir_exists($gallery_name) {
+	
+		$value = array('mandatory'=>FALSE,'status'=>FALSE);
+	
+		if(file_exists('./galeries/' . $gallery_name . '/images')) {
+			$value['status'] = TRUE;
+		}
+	
+		return $value;
+	
+	}
+	
+	private function is_thumbs_dir_exists($gallery_name) {
+	
+		$value = array('mandatory'=>FALSE,'status'=>FALSE);
+	
+		if(file_exists('./galeries/' . $gallery_name . '/thumbs')) {
+			$value['status'] = TRUE;
+		}
+	
+		return $value;
+	
+	}
+	private function is_gallery_xml_file_exists($gallery_name) {
+	
+		$value = array('mandatory'=>TRUE,'status'=>FALSE);
+	
+		if(file_exists('./galeries/' . $gallery_name . '/' . $gallery_name.'GalleryContent.xml')) {
+			$value['status'] = TRUE;
+		}
+	
+		return $value;
+	
+	}
+		
 }

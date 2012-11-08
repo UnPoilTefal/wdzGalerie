@@ -8,7 +8,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<title><?php echo $title ?> - wdzGalerie</title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<?php
 		echo link_tag('css/global/bootstrap.min.css');
 		echo link_tag('css/global/bootstrap-responsive.min.css');
@@ -36,18 +36,6 @@
                             <li><a href="<?php echo base_url(index_page() . '/admin/accueil')?>">Admin</a></li>
                             <li><a href="#about">About</a></li>
                             <li><a href="#contact">Contact</a></li>
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="#">Action</a></li>
-                                    <li><a href="#">Another action</a></li>
-                                    <li><a href="#">Something else here</a></li>
-                                    <li class="divider"></li>
-                                    <li class="nav-header">Nav header</li>
-                                    <li><a href="#">Separated link</a></li>
-                                    <li><a href="#">One more separated link</a></li>
-                                </ul>
-                            </li>
                         </ul>
                         <form class="navbar-form pull-right">
                             <input class="span2" type="text" placeholder="Email">

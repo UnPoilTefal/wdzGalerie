@@ -8,20 +8,15 @@ class Pages extends CI_Controller {
 		//$this->load->library('displaycontent');
 		$this->load->helper('url');
 		$this->load->model('gallery_model_xml');
-		/*
-		try {
-			$this->load->library('gallerycontent', $params);
-		} catch (Exception $e) {
-			show_error($e->getMessage());
-		}
-*/		
+
 		$data['title'] = ucfirst($gallery_name); // Capitalize the first letter
 		$data['gallery'] = $this->gallery_model_xml->get_existing_gallery($gallery_name);
-		
+		$data['lst_galeries'] = $this->gallery_model_xml->get_list_galeries();
 		$this->load->view('templates/global/header', $data);
 		if($data['gallery']['available'] === TRUE) {
 			$this->load->view('pages/view', $data);
 		} else {
+			$data['gallery']['name'] = $gallery_name; 
 			$this->load->view('pages/gallery_not_available', $data);
 		}
 		$this->load->view('templates/global/footer', $data);

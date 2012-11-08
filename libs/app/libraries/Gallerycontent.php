@@ -30,8 +30,8 @@ class Gallerycontent {
 		$this->gallery_name = $galleryName;
 		$this->file_images_directory = $this->galleryPath . '/images/';
 		$this->file_thumbs_directory = $this->galleryPath . '/thumbs/';
-		$this->web_images_directory = 'galeries/' . $galleryName . '/images/';
-		$this->web_thumbs_directory = 'galeries/' . $galleryName . '/thumbs/';
+		$this->web_images_directory = base_url().'galeries/' . $galleryName . '/images/';
+		$this->web_thumbs_directory = base_url().'galeries/' . $galleryName . '/thumbs/';
 		$this->xml_url = $this->galleryPath . '/' . $galleryName.'GalleryContent.xml';
 		
 		$this->nb_existing_images = 0;

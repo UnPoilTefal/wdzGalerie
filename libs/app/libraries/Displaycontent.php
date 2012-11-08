@@ -114,7 +114,7 @@ class Displaycontent {
 						$sCaption = $captionNode->nodeValue;
 					}
 			
-					$sHtml = $sHtml . "<li class='image dragbox'><img src='" . base_url($sThumb) . "' class='fade' rel='" . $sFilename . "'/></li>";
+					$sHtml = $sHtml . "<li class='image dragbox'><img src='" . $sThumb . "' class='fade' rel='" . $sFilename . "'/></li>";
 			
 				}
 			

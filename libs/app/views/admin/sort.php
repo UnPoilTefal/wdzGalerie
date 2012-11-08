@@ -46,6 +46,7 @@
 				dataType : "html",
 				type : "POST",
 				success : function(html) {
+					alert(html);
 					$("#results").html(html).delay(3000).fadeOut();
 					
 				},
