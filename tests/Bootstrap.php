@@ -9,7 +9,7 @@ $dir = realpath(dirname(__FILE__));
 // Path constants
 defined('PROJECT_BASE') OR define('PROJECT_BASE', realpath($dir.'/../').'/libs/');
 defined('SYSTEM_PATH') OR define('SYSTEM_PATH', PROJECT_BASE.'sys/');
-
+/*
 // Get vfsStream either via PEAR or composer
 foreach (explode(PATH_SEPARATOR, get_include_path()) as $path)
 {
@@ -32,7 +32,7 @@ if ( ! class_exists('vfsStream') && file_exists(PROJECT_BASE.'vendor/autoload.ph
 defined('BASEPATH') OR define('BASEPATH', vfsStream::url('system/'));
 defined('APPPATH') OR define('APPPATH', vfsStream::url('application/'));
 defined('VIEWPATH') OR define('VIEWPATH', APPPATH.'views/');
-
+*/
 // Set localhost "remote" IP
 isset($_SERVER['REMOTE_ADDR']) OR $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
