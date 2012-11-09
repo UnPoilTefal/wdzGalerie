@@ -110,20 +110,50 @@ class Gallery_model_xml extends CI_Model {
 	
 	public function get_list_galeries() {
 		$lst_galeries=array();
+		$dir_galeries = array();
 		if ($handle = opendir('./galeries'))
 		{
 			
 			$cpt=0;
+			
 			while (false !== ($file = readdir($handle)))
 			{
 				if($file != "." && $file != ".." ){
 					if(is_dir('./galeries' . '/' .$file))
-						$lst_galeries[$cpt]=$file;
+						$dir_galeries[$cpt]=$file;
 				}
 				$cpt++;
 			}
 			closedir($handle);
+			
 		}
+		
+		foreach ($dir_galeries as $dir_name) {
+			
+			$test_xml_file = $this->is_gallery_xml_file_exists($dir_name);
+			
+			if($test_xml_file['status']) {
+				$gallery_path = './galeries/' . $dir_name;
+				$xml_url = $gallery_path . '/' . $dir_name.'GalleryContent.xml';
+					
+				$current_xml = new DOMDocument();
+				$current_xml->load($xml_url);
+				
+				$gallery_nodes_lst = $current_xml->getElementsByTagName('gallery');
+				foreach ($gallery_nodes_lst as $gallery) {
+					$lst_galeries[$dir_name]['gallery_name'] = $gallery->getAttribute('galleryname');
+					$lst_galeries[$dir_name]['hl'] = $gallery->getAttribute('hl');
+					$lst_galeries[$dir_name]['dir_name'] = $dir_name;
+				}
+				
+			} else {
+				$lst_galeries[$dir_name]['gallery_name'] = $dir_name.'KO';
+				$lst_galeries[$dir_name]['hl'] = '';
+				$lst_galeries[$dir_name]['dir_name'] = $dir_name;
+			}
+			
+		}
+		
 		return $lst_galeries;
 	}
 	private function is_gallery_dir_exists($gallery_name) {
@@ -172,5 +202,4 @@ class Gallery_model_xml extends CI_Model {
 		return $value;
 	
 	}
-		
 }

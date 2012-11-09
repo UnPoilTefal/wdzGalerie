@@ -105,6 +105,51 @@ class Xmlgallery {
 		}
 		
 	}
+	public function generate_adf() {
+		
+		$exportDoc = $this->CI->gallerycontent;
+		
+		
+		$gallery_path = FCPATH.'galeries/adf';
+		$xml_url = $gallery_path . '/config_complet.xml';
+			
+		$source_xml = new DOMDocument();
+			
+		$source_xml->load($xml_url);
+		$source_images = $source_xml->getElementsByTagName('item');
+		
+		/**/
+		$filename = '';
+		$thumb_url = '';
+		$order = 0;
+		$display = '';
+		$caption = '';
+		$url='http://album-de-famille.com/new/Albums_reunions/';
+		/**/
+		
+		foreach ($source_images as $item) {
+			$order++;
+			$media_path_lst = $item->getElementsByTagName('media_path');
+			foreach ($media_path_lst as $media_path) {
+				$filename = $url.$media_path->nodeValue;
+			}
+			
+			$thumb_path_lst = $item->getElementsByTagName('thumb_path');
+			foreach ($thumb_path_lst as $thumb_path) {
+				$thumb_url = $url.$thumb_path->nodeValue;
+			}
+				
+			$desc_lst = $item->getElementsByTagName('description');
+			foreach ($desc_lst as $desc) {
+				$caption = $desc->nodeValue;
+			}
+				
+			$exportDoc->addImage($filename, $order, '1', $caption, $filename, $thumb_url, TRUE);
+		}
+	
+		return 'Ecrit : ' . $exportDoc->save() . ' bytes';
+	
+	}
 	
 }
 

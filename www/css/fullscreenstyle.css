@@ -52,7 +52,8 @@
   left: 0;
   line-height: 1em;
   display: none;
-  font-size: 150%;
+  /*font-size: 150%;*/
+  font-size: 14px;
 }
 
 #fs-caption span {

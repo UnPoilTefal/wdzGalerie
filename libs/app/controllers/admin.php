@@ -141,4 +141,26 @@ class Admin extends CI_Controller {
 		}
 		return $return_value;
 	}
+	
+	public function generateadf() {
+		$this->load->helper('html');
+		$this->load->helper('url');
+		$this->load->library('xmlgallery');
+		$gallery_name = 'adf';
+		$params = array('galleryname' => $gallery_name, 'initmode' => TRUE);
+		try {
+			$this->load->library('gallerycontent', $params);
+		} catch (Exception $e) {
+			show_error($e->getMessage());
+		}
+		
+		$data['title'] = ucfirst($gallery_name); // Capitalize the first letter
+		$data['galleryname'] = $gallery_name;
+		$data['result'] = $this->xmlgallery->generate_adf();
+		
+		$this->load->view('templates/header', $data);
+		$this->load->view('admin/init', $data);
+		$this->load->view('templates/footer', $data);
+		
+	}
 }

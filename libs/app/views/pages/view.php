@@ -17,7 +17,7 @@
 					<ul class="nav nav-list">
 	  					<li class="nav-header">Galeries</li>
 						<?php foreach ($lst_galeries as $galerie):?>
-						<li <?php if($galerie == $gallery['name']) { echo 'class="active"';} ?>><a href="<?php echo  base_url(index_page() . '/pages/view/' . $galerie);?>"><?php echo $galerie;?></a></li>
+						<li <?php if($galerie['dir_name'] == $gallery['name']) { echo 'class="active"';} ?>><a href="<?php echo  base_url(index_page() . '/pages/view/' . $galerie['dir_name']);?>"><?php echo $galerie['gallery_name'];?></a></li>
 	  					<?php endforeach;?>
 	 				</ul>
 				</div>

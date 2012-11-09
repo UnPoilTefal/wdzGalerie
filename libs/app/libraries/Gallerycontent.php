@@ -14,11 +14,17 @@ class Gallerycontent {
 	private $nb_existing_images;
 	private $initMode;
 	private $galleryPath;
+	private $remote;
 	
 	function __construct($params){
 		
 		$galleryName = $params['galleryname'];
 		$this->initMode = $params['initmode'];
+		if (array_key_exists('remote', $params)) {
+			$this->remote = $params['remote'];
+		} else {
+			$this->remote = FALSE;
+		}
 		$this->galleryPath = FCPATH.'galeries/' . $galleryName;
 				
 		if($galleryName == '') {
@@ -99,17 +105,26 @@ class Gallerycontent {
 		
 		$this->root = $this->document->createElement('gallery');
 		$this->root = $this->document->appendChild($this->root);
+		$rootAttr = $this->document->createAttribute('galleryname');
+		$rootAttr->value = $this->gallery_name;
+		$this->root->appendChild($rootAttr);
+		$rootAttr2 = $this->document->createAttribute('hl');
+		$rootAttr2->value = '';
+		$this->root->appendChild($rootAttr2);
 		$this->images = $this->document->createElement('images');
-		$imagesAttr = $this->document->createAttribute('galleryname');
-		$imagesAttr->value = $this->gallery_name;
+		$imagesAttr = $this->document->createAttribute('remote');
+		$imagesAttr->value = $this->remote;
 		$this->images->appendChild($imagesAttr);
 		$this->images = $this->root->appendChild($this->images);
 		
 	}
 	
-	function addImage($filename, $order, $display, $caption) {
-		
-		if(file_exists($this->getFileImagesDirectory() . $filename)) {
+	function addImage($filename, $order, $display, $caption, $url='', $url_thumb, $remote=FALSE) {
+		if($url === '') {
+			$url = $this->getWebImagesDirectory() . $filename;
+		}
+		//if(file_exists($this->getFileImagesDirectory() . $filename)) {
+		if($remote || (!$remote && file_exists($this->getFileImagesDirectory() . $filename))) {
 			
 			$imageElem = $this->document->createElement('image');
 			
@@ -120,7 +135,7 @@ class Gallerycontent {
 			
 			// Value for the created attribute
 			$filenameAttr->value = $filename;
-			$urlAttr->value = $this->getWebImagesDirectory() . $filename;
+			$urlAttr->value = $url;
 			$orderAttr->value = $order;
 			$displayAttr->value = $display;
 			
@@ -137,19 +152,20 @@ class Gallerycontent {
 			
 			$thumbElem = $this->document->createElement('thumb');
 			$thumUrlAttr = $this->document->createAttribute('thumburl');
-			$thumUrlAttr->value = $this->getWebThumbsDirectory() . $filename;
+			$thumUrlAttr->value = $url_thumb;
 			$thumbElem->appendChild($thumUrlAttr);
 			$captionElem = $imageElem->appendChild($thumbElem);
 			
-			if(!file_exists($this->getFileThumbsDirectory() . $filename)) {
-				if($this->initMode) {
-					$this->imagethumb($filename,'',220);
-				} else {
-					throw new Exception("Les miniatures doivent etre initialisees.");
+			if(!$remote) {
+				if(!file_exists($this->getFileThumbsDirectory() . $filename)) {
+					if($this->initMode) {
+						$this->imagethumb($filename,'',220);
+					} else {
+						throw new Exception("Les miniatures doivent etre initialisees.");
+					}
+					
 				}
-				
 			}
-			
 			$this->nb_existing_images ++;
 		
 		} else {
