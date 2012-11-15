@@ -201,5 +201,32 @@ if (defined('ENVIRONMENT'))
  */
 require_once BASEPATH.'core/CodeIgniter.php';
 
+/*
+| -------------------------------------------------------------------
+|  Native Auto-load
+| -------------------------------------------------------------------
+|
+| Nothing to do with config/autoload.php, this allows PHP autoload to work
+| for controller types and some third-party libraries.
+|
+*/
+function __autoload($class)
+{
+	if(strpos($class, 'CI_') !== 0)
+	{
+
+		$lib = APPPATH . 'libraries/'. $class . EXT;
+		$class = APPPATH . 'classes/'. $class . EXT;
+
+		if(file_exists($class))
+		{
+			include_once( $class );
+		}
+		else if(file_exists($lib))
+		{
+			include_once( $lib );
+		}
+	}
+}
 /* End of file index.php */
 /* Location: ./index.php */
