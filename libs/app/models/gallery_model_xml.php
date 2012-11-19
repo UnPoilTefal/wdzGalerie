@@ -8,20 +8,28 @@ class Gallery_model_xml extends CI_Model {
 		parent::__construct();
 	}
 	
-	public function get_existing_gallery($gallery_name) {
+	public function get_existing_gallery($dir_name) {
 		$gallery = array();
-		if($this->is_gallery_ok($gallery_name)) {
-			$gallery['available'] = TRUE;
+		$galerie = new Galerie($dir_name);
+		
+		if($this->is_gallery_ok($dir_name)) {
 			
-			$gallery_path = FCPATH.'galeries/' . $gallery_name;
-			$xml_url = $gallery_path . '/' . $gallery_name.'GalleryContent.xml';
+			$gallery['available'] = TRUE;
+			$galerie->set_available(TRUE);
+			
+			$gallery_path = FCPATH.'galeries/' . $dir_name;
+			$xml_url = $gallery_path . '/' . $dir_name.'GalleryContent.xml';
 			
 			$existingxml = new DOMDocument();
 			
 			$existingxml->load($xml_url);
+			$gallery_root = $existingxml->firstChild;
 			
-			$gallery['name'] = $gallery_name;
-			$gallery['dir_name'] = $gallery_name;
+			$galerie->set_hl_pic($gallery_root->getAttribute('hl'));
+			$galerie->set_gallery_name($gallery_root->getAttribute('galleryname'));
+			$gallery['name'] = $gallery_root->getAttribute('galleryname');
+			
+			$gallery['dir_name'] = $dir_name;
 			$gallery['lst_images'] = array();
 			
 			$existingimages = $existingxml->getElementsByTagName('image');
@@ -37,14 +45,26 @@ class Gallery_model_xml extends CI_Model {
 				if($nb_existingimg > 0) {
 					foreach ($tableauimages as $existingimage) {
 						$nb_order++;
+						$current_image = new Image($existingimage['image']->getAttribute('filename'));
 						$image = array();							
 						$image['filename'] = $existingimage['image']->getAttribute('filename');
+						
+						$current_image->set_url($existingimage['image']->getAttribute('url'));
 						$image['src'] = $existingimage['image']->getAttribute('url');
+						
+						$current_image->set_order($nb_order);
 						$image['order'] = $nb_order;
+						
+						$current_image->set_display($existingimage['image']->getAttribute('display'));
 						$image['display'] = $existingimage['image']->getAttribute('display');
+						
+						$current_image->set_caption($existingimage['caption']);
 						$image['caption'] = $existingimage['caption'];
+						
+						$current_image->set_thumb_url($existingimage['thumb']);
 						$image['thumb'] = $existingimage['thumb'];
 						//$this->addImage($filename, $order, $display, $caption);
+						$galerie->add_image($current_image);
 						$gallery['lst_images'][]= $image;
 					}
 				}
@@ -52,6 +72,7 @@ class Gallery_model_xml extends CI_Model {
 				
 		} else {
 			$gallery['available'] = FALSE;
+			$galerie->set_available(FALSE);
 		}
 		return $gallery;
 	}
@@ -109,7 +130,7 @@ class Gallery_model_xml extends CI_Model {
 	}
 	
 	public function get_list_galeries() {
-		$lst_galeries=array();
+		$lst_galeries = new ArrayObject();
 		$dir_galeries = array();
 		if ($handle = opendir('./galeries'))
 		{
@@ -131,8 +152,11 @@ class Gallery_model_xml extends CI_Model {
 		foreach ($dir_galeries as $dir_name) {
 			
 			$test_xml_file = $this->is_gallery_xml_file_exists($dir_name);
+			$current_galerie = new Galerie($dir_name);
 			
 			if($test_xml_file['status']) {
+				$current_galerie = $this->get_existing_gallery($dir_name); 
+				/*
 				$gallery_path = './galeries/' . $dir_name;
 				$xml_url = $gallery_path . '/' . $dir_name.'GalleryContent.xml';
 					
@@ -145,13 +169,17 @@ class Gallery_model_xml extends CI_Model {
 					$lst_galeries[$dir_name]['hl'] = $gallery->getAttribute('hl');
 					$lst_galeries[$dir_name]['dir_name'] = $dir_name;
 				}
+				*/
+				
 				
 			} else {
+				/*				
 				$lst_galeries[$dir_name]['gallery_name'] = $dir_name.'KO';
 				$lst_galeries[$dir_name]['hl'] = '';
 				$lst_galeries[$dir_name]['dir_name'] = $dir_name;
+				*/
 			}
-			
+			$lst_galeries->append(serialize($current_galerie));
 		}
 		
 		return $lst_galeries;
