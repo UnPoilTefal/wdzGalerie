@@ -8,20 +8,24 @@ class Gallery_model_xml extends CI_Model {
 		parent::__construct();
 	}
 	
-	public function get_existing_gallery($gallery_name) {
+	public function get_existing_gallery($dir_name) {
 		$gallery = array();
-		if($this->is_gallery_ok($gallery_name)) {
+		
+		if($this->is_gallery_ok($dir_name)) {
+			
 			$gallery['available'] = TRUE;
 			
-			$gallery_path = FCPATH.'galeries/' . $gallery_name;
-			$xml_url = $gallery_path . '/' . $gallery_name.'GalleryContent.xml';
+			$gallery_path = FCPATH.'galeries/' . $dir_name;
+			$xml_url = $gallery_path . '/' . $dir_name.'GalleryContent.xml';
 			
 			$existingxml = new DOMDocument();
 			
 			$existingxml->load($xml_url);
+			$gallery_root = $existingxml->firstChild;
 			
-			$gallery['name'] = $gallery_name;
-			$gallery['dir_name'] = $gallery_name;
+			$gallery['name'] = $gallery_root->getAttribute('galleryname');
+			
+			$gallery['dir_name'] = $dir_name;
 			$gallery['lst_images'] = array();
 			
 			$existingimages = $existingxml->getElementsByTagName('image');
@@ -39,10 +43,15 @@ class Gallery_model_xml extends CI_Model {
 						$nb_order++;
 						$image = array();							
 						$image['filename'] = $existingimage['image']->getAttribute('filename');
+						
 						$image['src'] = $existingimage['image']->getAttribute('url');
+						
 						$image['order'] = $nb_order;
+						
 						$image['display'] = $existingimage['image']->getAttribute('display');
+						
 						$image['caption'] = $existingimage['caption'];
+						
 						$image['thumb'] = $existingimage['thumb'];
 						//$this->addImage($filename, $order, $display, $caption);
 						$gallery['lst_images'][]= $image;
@@ -109,7 +118,7 @@ class Gallery_model_xml extends CI_Model {
 	}
 	
 	public function get_list_galeries() {
-		$lst_galeries=array();
+		$lst_galeries = array();
 		$dir_galeries = array();
 		if ($handle = opendir('./galeries'))
 		{
@@ -133,6 +142,7 @@ class Gallery_model_xml extends CI_Model {
 			$test_xml_file = $this->is_gallery_xml_file_exists($dir_name);
 			
 			if($test_xml_file['status']) {
+				 
 				$gallery_path = './galeries/' . $dir_name;
 				$xml_url = $gallery_path . '/' . $dir_name.'GalleryContent.xml';
 					
@@ -147,14 +157,16 @@ class Gallery_model_xml extends CI_Model {
 				}
 				
 			} else {
+								
 				$lst_galeries[$dir_name]['gallery_name'] = $dir_name.'KO';
 				$lst_galeries[$dir_name]['hl'] = '';
 				$lst_galeries[$dir_name]['dir_name'] = $dir_name;
+				
 			}
-			
+			//array_push($lst_galeries, $current_galerie);
 		}
 		
-		return $lst_galeries;
+		return new ArrayObject($lst_galeries);
 	}
 	private function is_gallery_dir_exists($gallery_name) {
 		
