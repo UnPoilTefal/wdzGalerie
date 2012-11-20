@@ -11,7 +11,7 @@
 		          <h4>Initialisation des fichiers XML :</h4>
 					<ul>
 					<?php foreach ($lst_galeries as $galerie):?>
-					<li><a href='<?php echo base_url(index_page() . "/admin/init/" . $galerie['dir_name']);?>'>Initialisation de <?php echo $galerie['gallery_name']; ?></a></li>
+					<li><a href='<?php echo base_url(index_page() . "/admin/init/" . $galerie->get_dir_name());?>'>Initialisation de <?php echo $galerie->get_gallery_name(); ?></a></li>
 					<?php endforeach;?>
 					</ul>
 		        </div>
@@ -19,7 +19,7 @@
 		          <h4>Organisation des images :</h4>
 					<ul>
 					<?php foreach ($lst_galeries as $galerie):?>
-					<li><a href='<?php echo base_url(index_page() . "/admin/sort/" . $galerie['dir_name']);?>'>Organisation de <?php echo $galerie['gallery_name']; ?></a></li>
+					<li><a href='<?php echo base_url(index_page() . "/admin/sort/" . $galerie->get_dir_name());?>'>Organisation de <?php echo $galerie->get_gallery_name(); ?></a></li>
 					<?php endforeach;?>
 					</ul>
 		        </div>
@@ -27,7 +27,7 @@
 		          <h4>Status :</h4>
 					<ul>
 					<?php foreach ($lst_galeries as $galerie):?>
-					<li><a href='<?php echo base_url(index_page() . "/admin/status/" . $galerie['dir_name']);?>'>Afficher le status de <?php echo $galerie['gallery_name']; ?></a></li>
+					<li><a href='<?php echo base_url(index_page() . "/admin/status/" . $galerie->get_dir_name());?>'>Afficher le status de <?php echo $galerie->get_gallery_name(); ?></a></li>
 					<?php endforeach;?>
 					</ul>
 		        </div>

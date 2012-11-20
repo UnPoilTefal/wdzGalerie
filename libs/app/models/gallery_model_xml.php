@@ -1,86 +1,72 @@
 <?php
 class Gallery_model_xml extends CI_Model {
-	
+
 	private $CI;
-	
+
 	public function __construct()
 	{
 		parent::__construct();
 	}
-	
+
 	public function get_existing_gallery($dir_name) {
-		$gallery = array();
 		$galerie = new Galerie($dir_name);
-		
+
 		if($this->is_gallery_ok($dir_name)) {
-			
-			$gallery['available'] = TRUE;
+
 			$galerie->set_available(TRUE);
-			
+
 			$gallery_path = FCPATH.'galeries/' . $dir_name;
 			$xml_url = $gallery_path . '/' . $dir_name.'GalleryContent.xml';
-			
+
 			$existingxml = new DOMDocument();
-			
+
 			$existingxml->load($xml_url);
 			$gallery_root = $existingxml->firstChild;
-			
+
 			$galerie->set_hl_pic($gallery_root->getAttribute('hl'));
 			$galerie->set_gallery_name($gallery_root->getAttribute('galleryname'));
-			$gallery['name'] = $gallery_root->getAttribute('galleryname');
-			
-			$gallery['dir_name'] = $dir_name;
-			$gallery['lst_images'] = array();
-			
+			$galerie->set_remote_gallery($gallery_root->getAttribute('remote'));
+				
 			$existingimages = $existingxml->getElementsByTagName('image');
-			
+
 			if($existingimages->length > 0) {
 				$tableauimages = $this->getImageArrayFromImageNode($existingimages);
-			
+					
 				usort($tableauimages, array($this, 'sort_by_order_attr'));
-			
+					
 				$nb_existingimg = count($tableauimages);
-			
+					
 				$nb_order = 0;
 				if($nb_existingimg > 0) {
 					foreach ($tableauimages as $existingimage) {
 						$nb_order++;
 						$current_image = new Image($existingimage['image']->getAttribute('filename'));
-						$image = array();							
-						$image['filename'] = $existingimage['image']->getAttribute('filename');
-						
+
 						$current_image->set_url($existingimage['image']->getAttribute('url'));
-						$image['src'] = $existingimage['image']->getAttribute('url');
-						
+
 						$current_image->set_order($nb_order);
-						$image['order'] = $nb_order;
-						
+
 						$current_image->set_display($existingimage['image']->getAttribute('display'));
-						$image['display'] = $existingimage['image']->getAttribute('display');
-						
+
 						$current_image->set_caption($existingimage['caption']);
-						$image['caption'] = $existingimage['caption'];
-						
+
 						$current_image->set_thumb_url($existingimage['thumb']);
-						$image['thumb'] = $existingimage['thumb'];
-						//$this->addImage($filename, $order, $display, $caption);
+
 						$galerie->add_image($current_image);
-						$gallery['lst_images'][]= $image;
 					}
 				}
 			}
-				
+
 		} else {
-			$gallery['available'] = FALSE;
 			$galerie->set_available(FALSE);
 		}
-		return $gallery;
+		return $galerie;
 	}
 	private function getImageArrayFromImageNode($imageNode) {
-	
+
 		$lst_images = array();
 		foreach ($imageNode as $n) {
-	
+
 			$imagecontent = array();
 			$imagecontent['image'] = $n;
 			$lst_caption = $n->getElementsByTagName('caption');
@@ -95,48 +81,48 @@ class Gallery_model_xml extends CI_Model {
 		}
 		return $lst_images;
 	}
-	
+
 	public function check_status_gallery($gallery_name) {
-		
+
 		$check_lst = array('gallery_dir' => FALSE, 'images_dir' => FALSE, 'thumbs_dir' => FALSE, 'gallery_xml_file_exists' => FALSE, 'thumb_files_ok' => FALSE);
-		
+
 		$check_lst['gallery_dir'] = $this->is_gallery_dir_exists($gallery_name);
 		$check_lst['images_dir'] = $this->is_images_dir_exists($gallery_name);
 		$check_lst['thumbs_dir'] = $this->is_thumbs_dir_exists($gallery_name);
 		$check_lst['gallery_xml_file_exists'] = $this->is_gallery_xml_file_exists($gallery_name);
 		$check_lst['thumb_files_ok'] = array('mandatory'=>FALSE,'status'=>FALSE); //TODO add check method
-		
+
 		return $check_lst;
 	}
-	
+
 	public function is_gallery_ok($gallery_name) {
-		
+
 		$gallery_status = TRUE;
 		$chk_lst = $this->check_status_gallery($gallery_name);
 		foreach ($chk_lst as $k=>$current_status) {
-			
+
 			if($current_status['mandatory'] === TRUE && $current_status['status'] === FALSE) {
 				$gallery_status = FALSE;
 				break;
 			}
-			
+
 		}
-		
+
 		return $gallery_status;
 	}
-	
+
 	private function sort_by_order_attr($a, $b)	{
 		return (int) $a['image']->getAttribute('order') - (int) $b['image']->getAttribute('order');
 	}
-	
+
 	public function get_list_galeries() {
-		$lst_galeries = new ArrayObject();
+		$lst_galeries = array();
 		$dir_galeries = array();
 		if ($handle = opendir('./galeries'))
 		{
-			
+
 			$cpt=0;
-			
+
 			while (false !== ($file = readdir($handle)))
 			{
 				if($file != "." && $file != ".." ){
@@ -146,88 +132,239 @@ class Gallery_model_xml extends CI_Model {
 				$cpt++;
 			}
 			closedir($handle);
-			
+
 		}
-		
+
 		foreach ($dir_galeries as $dir_name) {
-			
+
 			$test_xml_file = $this->is_gallery_xml_file_exists($dir_name);
 			$current_galerie = new Galerie($dir_name);
-			
+
 			if($test_xml_file['status']) {
-				$current_galerie = $this->get_existing_gallery($dir_name); 
-				/*
-				$gallery_path = './galeries/' . $dir_name;
-				$xml_url = $gallery_path . '/' . $dir_name.'GalleryContent.xml';
-					
-				$current_xml = new DOMDocument();
-				$current_xml->load($xml_url);
-				
-				$gallery_nodes_lst = $current_xml->getElementsByTagName('gallery');
-				foreach ($gallery_nodes_lst as $gallery) {
-					$lst_galeries[$dir_name]['gallery_name'] = $gallery->getAttribute('galleryname');
-					$lst_galeries[$dir_name]['hl'] = $gallery->getAttribute('hl');
-					$lst_galeries[$dir_name]['dir_name'] = $dir_name;
-				}
-				*/
-				
-				
-			} else {
-				/*				
-				$lst_galeries[$dir_name]['gallery_name'] = $dir_name.'KO';
-				$lst_galeries[$dir_name]['hl'] = '';
-				$lst_galeries[$dir_name]['dir_name'] = $dir_name;
-				*/
+				$current_galerie = $this->get_existing_gallery($dir_name);
 			}
-			$lst_galeries->append(serialize($current_galerie));
+			
+			$lst_galeries[] = $current_galerie;
 		}
-		
+
 		return $lst_galeries;
 	}
 	private function is_gallery_dir_exists($gallery_name) {
-		
+
 		$value = array('mandatory'=>TRUE,'status'=>FALSE);
-		
+
 		if(file_exists('./galeries/' . $gallery_name)) {
 			$value['status'] = TRUE;
 		}
-		
+
 		return $value;
-		
+
 	}
-	
+
 	private function is_images_dir_exists($gallery_name) {
-	
+
 		$value = array('mandatory'=>FALSE,'status'=>FALSE);
-	
+
 		if(file_exists('./galeries/' . $gallery_name . '/images')) {
 			$value['status'] = TRUE;
 		}
-	
+
 		return $value;
-	
+
 	}
-	
+
 	private function is_thumbs_dir_exists($gallery_name) {
-	
+
 		$value = array('mandatory'=>FALSE,'status'=>FALSE);
-	
+
 		if(file_exists('./galeries/' . $gallery_name . '/thumbs')) {
 			$value['status'] = TRUE;
 		}
-	
+
 		return $value;
-	
+
 	}
 	private function is_gallery_xml_file_exists($gallery_name) {
-	
+
 		$value = array('mandatory'=>TRUE,'status'=>FALSE);
-	
+
 		if(file_exists('./galeries/' . $gallery_name . '/' . $gallery_name.'GalleryContent.xml')) {
 			$value['status'] = TRUE;
 		}
-	
+
 		return $value;
+
+	}
+
+	public function save_gallery(Galerie $p_gallery) {
+
+		if($p_gallery->is_available()) {
+			$gallery_path = FCPATH.'galeries/' . $p_gallery->get_dir_name();
+
+			$file_images_directory = $gallery_path . '/images/';
+			$file_thumbs_directory = $gallery_path . '/thumbs/';
+			$web_images_directory = base_url().'galeries/' . $p_gallery->get_dir_name() . '/images/';
+			$web_thumbs_directory = base_url().'galeries/' . $p_gallery->get_dir_name() . '/thumbs/';
+			$xml_url = $gallery_path . '/' . $p_gallery->get_dir_name() .'GalleryContent.xml';
+
+			$nb_existing_images = 0;
+
+			$document_xml = new DOMDocument('1.0');
+
+			// nous voulons un bel affichage
+			$document_xml->formatOutput = true;
+
+			$doc_root = $document_xml->createElement('gallery');
+			$doc_root = $document_xml->appendChild($doc_root);
+			$rootAttr = $document_xml->createAttribute('galleryname');
+			$rootAttr->value = $p_gallery->get_gallery_name();
+			$doc_root->appendChild($rootAttr);
+			$rootAttr2 = $document_xml->createAttribute('hl');
+			$image_hl = $p_gallery->get_hl_pic();
+			$url_hl = '';
+			if(is_null($image_hl)) {
+				$url_hl = "http://placehold.it/210x110";
+			} else {
+				$url_hl = $image_hl->get_thumb_url();
+			}
+			$rootAttr2->value = $url_hl;
+			$doc_root->appendChild($rootAttr2);
+			$rootAttr3 = $document_xml->createAttribute('remote');
+			$rootAttr3->value = $p_gallery->is_remote_gallery();
+			$doc_root->appendChild($rootAttr3);
+				
+			$doc_images = $document_xml->createElement('images');
+			$doc_images = $doc_root->appendChild($doc_images);
+
+			foreach ($p_gallery->get_lst_images() as $image) {
+
+				$imageElem = $document_xml->createElement('image');
+
+				$filenameAttr = $document_xml->createAttribute('filename');
+				$urlAttr = $document_xml->createAttribute('url');
+				$orderAttr = $document_xml->createAttribute('order');
+				$displayAttr = $document_xml->createAttribute('display');
+
+				// Value for the created attribute
+				$filenameAttr->value = $image->get_filename();
+				$urlAttr->value = $image->get_url();
+				$orderAttr->value = $image->get_order();
+				$displayAttr->value = $image->get_display();
+
+				// Don't forget to append it to the element
+				$imageElem->appendChild($filenameAttr);
+				$imageElem->appendChild($orderAttr);
+				$imageElem->appendChild($displayAttr);
+				$imageElem->appendChild($urlAttr);
+
+				$imageElem = $doc_images->appendChild($imageElem);
+
+				$captionElem = $document_xml->createElement('caption', $image->get_caption());
+				$captionElem = $imageElem->appendChild($captionElem);
+
+				$thumbElem = $document_xml->createElement('thumb');
+				$thumUrlAttr = $document_xml->createAttribute('thumburl');
+				$thumUrlAttr->value = $image->get_thumb_url();
+				$thumbElem->appendChild($thumUrlAttr);
+				$thumbElem = $imageElem->appendChild($thumbElem);
+
+				$nb_existing_images ++;
+
+			}
+				
+			$document_xml->save($xml_url);
+			chmod($xml_url, 0777);
+
+		} else {
+
+			throw new Exception("Echec de sauvegarde de la galerie " . $p_gallery->get_gallery_name() . "Elle doit être initialisée.");
+
+		}
+
+	}
+	public function sort_gallery_and_save(Galerie $p_galerie, $p_data) {
+		try {
+
+			$lst_images = $p_galerie->get_lst_images();
+
+			foreach ($lst_images as $existing_image) {
+					
+				foreach($p_data as $image){
+					$filename = $image['id'];
+					$order = $image['order'];
+
+					if ($existing_image->get_filename() === $filename) {
+						$existing_image->set_order($order);
+					}
+
+				}
+					
+			}
+				
+			$this->save_gallery($p_galerie);
+
+		} catch (Exception $e) {
+			throw new Exception('Erreur lors du traitement : sort_gallery_and_save');
+		}
+
+	}
+	
+	public function generate_adf() {
+	
+		$galerieObj = $this->get_existing_gallery("adf");
+	
+		//$exportDoc = $this->CI->gallerycontent;
+	
+	
+		$gallery_path = FCPATH.'galeries/adf';
+		$xml_url = $gallery_path . '/config_complet.xml';
+			
+		$source_xml = new DOMDocument();
+			
+		$source_xml->load($xml_url);
+		$source_images = $source_xml->getElementsByTagName('item');
+	
+		/**/
+		$filename = '';
+		$thumb_url = '';
+		$order = 0;
+		$display = '';
+		$caption = '';
+		$url='http://album-de-famille.com/new/Albums_reunions/';
+		/**/
+	
+		foreach ($source_images as $item) {
+			
+			$order++;
+			$media_path_lst = $item->getElementsByTagName('media_path');
+			foreach ($media_path_lst as $media_path) {
+				$filename = $url.$media_path->nodeValue;
+			}
+			$image = new Image($filename);
+			
+			$thumb_path_lst = $item->getElementsByTagName('thumb_path');
+			foreach ($thumb_path_lst as $thumb_path) {
+				$thumb_url = $url.$thumb_path->nodeValue;
+			}
+			$image->set_thumb_url($thumb_url);
+			
+			$desc_lst = $item->getElementsByTagName('description');
+			foreach ($desc_lst as $desc) {
+				$caption = $desc->nodeValue;
+			}
+			$image->set_caption($caption);
+
+			$image->set_order($order);
+			$image->set_display('1');
+			$image->set_url($filename);
+
+			$galerieObj->add_image($image);
+			//$exportDoc->addImage($filename, $order, '1', $caption, $filename, $thumb_url, TRUE);
+		}
+		$this->save_gallery($galerieObj);
+		return 'OK';//'Ecrit : ' . $exportDoc->save() . ' bytes';
 	
 	}
+	
+	
 }

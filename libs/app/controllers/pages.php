@@ -11,12 +11,11 @@ class Pages extends CI_Controller {
 
 		$data['title'] = ucfirst($gallery_name); // Capitalize the first letter
 		$data['gallery'] = $this->gallery_model_xml->get_existing_gallery($gallery_name);
-		$data['lst_galeries'] = new ArrayObject($this->gallery_model_xml->get_list_galeries());
+		$data['lst_galeries'] = $this->gallery_model_xml->get_list_galeries();
 		$this->load->view('templates/global/header', $data);
-		if($data['gallery']['available'] === TRUE) {
+		if($data['gallery']->is_available()) {
 			$this->load->view('pages/view', $data);
 		} else {
-			$data['gallery']['name'] = $gallery_name; 
 			$this->load->view('pages/gallery_not_available', $data);
 		}
 		$this->load->view('templates/global/footer', $data);
@@ -34,18 +33,13 @@ class Pages extends CI_Controller {
 		//$this->load->library('displaycontent');
 		$this->load->model('gallery_model_xml');
 		
-		//$data['lst_galeries'] = $this->gallery_model_xml->get_list_galeries();
-		$lst_galeries = new ArrayObject($this->gallery_model_xml->get_list_galeries());
-		$gal_infos = array();
-		foreach ($lst_galeries as $galkey => $s ) {
-			//echo 'cle-->'.$galkey . ' - valeur-->' . unserialize($s).'<\br>';
-			
-			//$gal_object = unserialize($gal); 
-			//$gal_id = $gal_object->get_dir_name();
-			//$gal_infos[];
-		}
-		
-		
+		$data['lst_galeries'] = $this->gallery_model_xml->get_list_galeries();
+/*
+		$lst_galeries = $this->gallery_model_xml->get_list_galeries();
+		foreach ($lst_galeries as $galerie) {
+			var_dump($galerie->get_hl_pic());
+			var_dump($galerie->hl_pic);
+		}*/
 		
 		$data['title'] = ucfirst('accueil'); // Capitalize the first letter
 		

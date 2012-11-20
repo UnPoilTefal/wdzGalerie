@@ -4,7 +4,7 @@ class Galerie {
 	
 	private $dir_name;
 	private $gallery_name;
-	private $hl_pic;
+	public $hl_pic;
 	private $remote_gallery;
 	private $lst_images;
 	private $available;
@@ -15,7 +15,7 @@ class Galerie {
 		$this->dir_name = $p_dir_name;
 		$this->gallery_name = $p_dir_name . 'InitClass';
 		$this->hl_pic = '';
-		$this->remote_gallery = false;
+		$this->remote_gallery = FALSE;
 		$this->lst_images = array(); 
 		
 	}
@@ -31,11 +31,19 @@ class Galerie {
 		$current_hl_pic = NULL;
 		
 		foreach ($this->get_lst_images() as $curr_image) {
-			if ($curr_image->get_filename() === $this->get_hl_pic()) {
+			
+			if ($curr_image->get_filename() === $this->hl_pic) {
+				
 				$current_hl_pic = $curr_image;
 				break;
-			};
+			} elseif ($curr_image->get_thumb_url() === $this->hl_pic){
+				
+				$current_hl_pic = $curr_image;
+				break;
+
+			}
 		}
+		
 		return $current_hl_pic;
 	}
 	

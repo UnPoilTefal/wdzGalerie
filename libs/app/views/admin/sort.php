@@ -18,7 +18,7 @@
 		$('#container').disableSelection();
 		$( "#retour" ).button();
 		$( "#retour" ).click(function( event ) {
-			$(location).attr('href','<?=base_url(index_page());?>');
+			$(location).attr('href','<?=base_url(index_page().'/admin/accueil');?>');
 			event.preventDefault();
 		});
 
@@ -37,7 +37,7 @@
 			var erreur = '<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;"><p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span><strong>Gallery status :</strong> Error during sort action.</p></div>';
 			var shortorder = {
 					images : items,
-					galleryname : '<?php echo $galleryname; ?>'
+					galleryname : '<?php echo $gallery->get_dir_name(); ?>'
 			};
 			$.ajax({
 				url : '<?php echo base_url(index_page() . '/admin/sort_galerie');?>',
@@ -46,9 +46,7 @@
 				dataType : "html",
 				type : "POST",
 				success : function(html) {
-					alert(html);
 					$("#results").html(html).delay(3000).fadeOut();
-					
 				},
 				error: function(){  
 					$("#results").html(erreur).delay(3000).fadeOut();
@@ -60,7 +58,11 @@
 	});	
 </script>
 	<div id="main">
-	<ul id="container" ><?=$this->displaycontent->displaySortGallery($galleryname); ?></ul>
+	<ul id="container" >
+	<?php foreach ($gallery->get_lst_images() as $image):?>
+		<li class="image dragbox"><img src="<?php echo $image->get_thumb_url(); ?>" class="fade" rel="<?php echo $image->get_filename(); ?>"/></li>
+	<?php endforeach;?>
+	</ul>
 	<div id="footer">
 		<button id="retour">Retour</button>
 	</div>
