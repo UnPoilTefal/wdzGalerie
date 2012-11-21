@@ -17,15 +17,22 @@ class Gallery_model_xml extends CI_Model {
 
 			$gallery_path = FCPATH.'galeries/' . $dir_name;
 			$xml_url = $gallery_path . '/' . $dir_name.'GalleryContent.xml';
-
+				
 			$existingxml = new DOMDocument();
 
 			$existingxml->load($xml_url);
-			$gallery_root = $existingxml->firstChild;
-
-			$galerie->set_hl_pic($gallery_root->getAttribute('hl'));
-			$galerie->set_gallery_name($gallery_root->getAttribute('galleryname'));
-			$galerie->set_remote_gallery($gallery_root->getAttribute('remote'));
+				
+			$gallery_root = $existingxml->getElementsByTagName('gallery')->item(0);
+				
+			if($gallery_root->hasAttribute('hl')) {
+				$galerie->set_hl_pic($gallery_root->getAttribute('hl'));
+			}
+			if($gallery_root->hasAttribute('galleryname')) {
+				$galerie->set_gallery_name($gallery_root->getAttribute('galleryname'));
+			}
+			if($gallery_root->hasAttribute('remote')) {
+				$galerie->set_remote_gallery($gallery_root->getAttribute('remote'));
+			}
 				
 			$existingimages = $existingxml->getElementsByTagName('image');
 
@@ -92,6 +99,12 @@ class Gallery_model_xml extends CI_Model {
 		$check_lst['gallery_xml_file_exists'] = $this->is_gallery_xml_file_exists($gallery_name);
 		$check_lst['thumb_files_ok'] = array('mandatory'=>FALSE,'status'=>FALSE); //TODO add check method
 
+		if($check_lst['gallery_xml_file_exists']['status']) {
+			$check_lst['gallery_xml_schema_valid'] = $this->is_gallery_xml_schema_valid($gallery_name);
+		} else {
+			$check_lst['gallery_xml_schema_valid'] = array('mandatory'=>TRUE,'status'=>FALSE);
+		}
+
 		return $check_lst;
 	}
 
@@ -143,7 +156,7 @@ class Gallery_model_xml extends CI_Model {
 			if($test_xml_file['status']) {
 				$current_galerie = $this->get_existing_gallery($dir_name);
 			}
-			
+				
 			$lst_galeries[] = $current_galerie;
 		}
 
@@ -232,7 +245,7 @@ class Gallery_model_xml extends CI_Model {
 			$rootAttr3 = $document_xml->createAttribute('remote');
 			$rootAttr3->value = $p_gallery->is_remote_gallery();
 			$doc_root->appendChild($rootAttr3);
-				
+
 			$doc_images = $document_xml->createElement('images');
 			$doc_images = $doc_root->appendChild($doc_images);
 
@@ -271,7 +284,7 @@ class Gallery_model_xml extends CI_Model {
 				$nb_existing_images ++;
 
 			}
-				
+
 			$document_xml->save($xml_url);
 			chmod($xml_url, 0777);
 
@@ -300,7 +313,7 @@ class Gallery_model_xml extends CI_Model {
 				}
 					
 			}
-				
+
 			$this->save_gallery($p_galerie);
 
 		} catch (Exception $e) {
@@ -308,14 +321,14 @@ class Gallery_model_xml extends CI_Model {
 		}
 
 	}
-	
+
 	public function generate_adf() {
-	
+
 		$galerieObj = $this->get_existing_gallery("adf");
-	
+
 		//$exportDoc = $this->CI->gallerycontent;
-	
-	
+
+
 		$gallery_path = FCPATH.'galeries/adf';
 		$xml_url = $gallery_path . '/config_complet.xml';
 			
@@ -323,7 +336,7 @@ class Gallery_model_xml extends CI_Model {
 			
 		$source_xml->load($xml_url);
 		$source_images = $source_xml->getElementsByTagName('item');
-	
+
 		/**/
 		$filename = '';
 		$thumb_url = '';
@@ -332,22 +345,22 @@ class Gallery_model_xml extends CI_Model {
 		$caption = '';
 		$url='http://album-de-famille.com/new/Albums_reunions/';
 		/**/
-	
+
 		foreach ($source_images as $item) {
-			
+				
 			$order++;
 			$media_path_lst = $item->getElementsByTagName('media_path');
 			foreach ($media_path_lst as $media_path) {
 				$filename = $url.$media_path->nodeValue;
 			}
 			$image = new Image($filename);
-			
+				
 			$thumb_path_lst = $item->getElementsByTagName('thumb_path');
 			foreach ($thumb_path_lst as $thumb_path) {
 				$thumb_url = $url.$thumb_path->nodeValue;
 			}
 			$image->set_thumb_url($thumb_url);
-			
+				
 			$desc_lst = $item->getElementsByTagName('description');
 			foreach ($desc_lst as $desc) {
 				$caption = $desc->nodeValue;
@@ -363,8 +376,51 @@ class Gallery_model_xml extends CI_Model {
 		}
 		$this->save_gallery($galerieObj);
 		return 'OK';//'Ecrit : ' . $exportDoc->save() . ' bytes';
-	
+
 	}
-	
-	
+
+	private function is_gallery_xml_schema_valid($p_dir_name) {
+
+		$value = array('mandatory'=>TRUE,'status'=>FALSE);
+
+		$gallery_path = FCPATH.'galeries/' . $p_dir_name;
+		$xml_url = $gallery_path . '/' . $p_dir_name.'GalleryContent.xml';
+			
+		$existingxml = new DOMDocument('1.0');
+
+		$existingxml->load($xml_url);
+		$valide = @$existingxml->validate();
+
+		//$existingxml->schemaValidate(base_url(). 'wdzGalleryContent.dtd');
+		if($valide) {
+			$value['status'] = TRUE;
+		}
+
+		return $value;
+
+	}
+
+	public function init_gallery_xml($p_dir_name) {
+
+		$gallery_dir_exists = $this->is_gallery_dir_exists($p_dir_name); 
+		$gallery_xml_file_exists = is_gallery_xml_file_exists($p_dir_name);
+		
+		if(!$gallery_dir_exists['status']) {
+
+			//TODO Create gallery directory
+			
+		}
+		
+		$gallery_xml = new Galerie_xml_dao($p_dir_name);
+		
+		if($gallery_xml_file_exists['status']) {
+
+			$gallery_xml->initExistingDoc();
+			
+		} 
+		
+		echo $gallery_xml->save($xml_url);
+		
+	}
+
 }

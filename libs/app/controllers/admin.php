@@ -100,6 +100,7 @@ class Admin extends CI_Controller {
 		$table_lst[] = $this->check_lst_disp_values('Repertoire des images', $check_lst['images_dir']);
 		$table_lst[] = $this->check_lst_disp_values('Repertoire des miniatures', $check_lst['thumbs_dir']);
 		$table_lst[] = $this->check_lst_disp_values('Fichier XML de la galerie', $check_lst['gallery_xml_file_exists']);
+		$table_lst[] = $this->check_lst_disp_values('Fichiers XML valide', $check_lst['gallery_xml_schema_valid']);
 		$table_lst[] = $this->check_lst_disp_values('Fichiers de miniatures', $check_lst['thumb_files_ok']);
 
 		$data['check_lst'] = $table_lst;
