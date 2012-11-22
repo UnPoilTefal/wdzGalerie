@@ -12,81 +12,27 @@ class Gallery_model_xml extends CI_Model {
 		$galerie = new Galerie($dir_name);
 
 		if($this->is_gallery_ok($dir_name)) {
-
+			
 			$galerie->set_available(TRUE);
 
-			$gallery_path = FCPATH.'galeries/' . $dir_name;
-			$xml_url = $gallery_path . '/' . $dir_name.'GalleryContent.xml';
+			$galerie_dao = new Galerie_xml_dao($dir_name);
+			
+			$galerie->set_hl_pic($galerie_dao->get_hl_pic());
+
+			$galerie->set_gallery_name($galerie_dao->get_gallery_name());
 				
-			$existingxml = new DOMDocument();
+			$galerie->set_remote_gallery($galerie_dao->get_remote());
 
-			$existingxml->load($xml_url);
-				
-			$gallery_root = $existingxml->getElementsByTagName('gallery')->item(0);
-				
-			if($gallery_root->hasAttribute('hl')) {
-				$galerie->set_hl_pic($gallery_root->getAttribute('hl'));
-			}
-			if($gallery_root->hasAttribute('galleryname')) {
-				$galerie->set_gallery_name($gallery_root->getAttribute('galleryname'));
-			}
-			if($gallery_root->hasAttribute('remote')) {
-				$galerie->set_remote_gallery($gallery_root->getAttribute('remote'));
-			}
-				
-			$existingimages = $existingxml->getElementsByTagName('image');
+			$existingimages = $galerie_dao->get_lst_images();
 
-			if($existingimages->length > 0) {
-				$tableauimages = $this->getImageArrayFromImageNode($existingimages);
-					
-				usort($tableauimages, array($this, 'sort_by_order_attr'));
-					
-				$nb_existingimg = count($tableauimages);
-					
-				$nb_order = 0;
-				if($nb_existingimg > 0) {
-					foreach ($tableauimages as $existingimage) {
-						$nb_order++;
-						$current_image = new Image($existingimage['image']->getAttribute('filename'));
-
-						$current_image->set_url($existingimage['image']->getAttribute('url'));
-
-						$current_image->set_order($nb_order);
-
-						$current_image->set_display($existingimage['image']->getAttribute('display'));
-
-						$current_image->set_caption($existingimage['caption']);
-
-						$current_image->set_thumb_url($existingimage['thumb']);
-
-						$galerie->add_image($current_image);
-					}
-				}
+			foreach ($existingimages as $current_image) {
+				$galerie->add_image($current_image);
 			}
 
 		} else {
 			$galerie->set_available(FALSE);
 		}
 		return $galerie;
-	}
-	private function getImageArrayFromImageNode($imageNode) {
-
-		$lst_images = array();
-		foreach ($imageNode as $n) {
-
-			$imagecontent = array();
-			$imagecontent['image'] = $n;
-			$lst_caption = $n->getElementsByTagName('caption');
-			foreach ($lst_caption as $caption) {
-				$imagecontent['caption'] = $caption->nodeValue;
-			}
-			$lst_thumb = $n->getElementsByTagName('thumb');
-			foreach ($lst_thumb as $thumb) {
-				$imagecontent['thumb'] = $thumb->getAttribute('thumburl');
-			}
-			$lst_images[] = $imagecontent;
-		}
-		return $lst_images;
 	}
 
 	public function check_status_gallery($gallery_name) {
@@ -97,13 +43,8 @@ class Gallery_model_xml extends CI_Model {
 		$check_lst['images_dir'] = $this->is_images_dir_exists($gallery_name);
 		$check_lst['thumbs_dir'] = $this->is_thumbs_dir_exists($gallery_name);
 		$check_lst['gallery_xml_file_exists'] = $this->is_gallery_xml_file_exists($gallery_name);
+		$check_lst['gallery_xml_file_valid'] = $this->is_gallery_xml_file_valid($gallery_name);
 		$check_lst['thumb_files_ok'] = array('mandatory'=>FALSE,'status'=>FALSE); //TODO add check method
-
-		if($check_lst['gallery_xml_file_exists']['status']) {
-			$check_lst['gallery_xml_schema_valid'] = $this->is_gallery_xml_schema_valid($gallery_name);
-		} else {
-			$check_lst['gallery_xml_schema_valid'] = array('mandatory'=>TRUE,'status'=>FALSE);
-		}
 
 		return $check_lst;
 	}
@@ -123,40 +64,51 @@ class Gallery_model_xml extends CI_Model {
 
 		return $gallery_status;
 	}
-
-	private function sort_by_order_attr($a, $b)	{
-		return (int) $a['image']->getAttribute('order') - (int) $b['image']->getAttribute('order');
+	
+	public function get_list_available_galeries() {
+		
+		$lst_avail = array();
+		
+		$lst_galeries = $this->get_list_galeries();
+		
+		foreach ($lst_galeries as $galerie) {
+			if($galerie->is_available()) {
+				array_push($lst_avail, $galerie);
+			}
+		}
+		
+		return $lst_avail;
 	}
 
+	public function get_list_not_available_galeries() {
+	
+		$lst_not_avail = array();
+	
+		$lst_galeries = $this->get_list_galeries();
+	
+		foreach ($lst_galeries as $galerie) {
+			if(!$galerie->is_available()) {
+				array_push($lst_not_avail, $galerie);
+			}
+		}
+	
+		return $lst_not_avail;
+	}
+	
 	public function get_list_galeries() {
 		$lst_galeries = array();
-		$dir_galeries = array();
-		if ($handle = opendir('./galeries'))
-		{
 
-			$cpt=0;
-
-			while (false !== ($file = readdir($handle)))
-			{
-				if($file != "." && $file != ".." ){
-					if(is_dir('./galeries' . '/' .$file))
-						$dir_galeries[$cpt]=$file;
-				}
-				$cpt++;
-			}
-			closedir($handle);
-
-		}
-
+		$dir_galeries = $this->get_lst_gallery_dir();
+		
 		foreach ($dir_galeries as $dir_name) {
 
-			$test_xml_file = $this->is_gallery_xml_file_exists($dir_name);
-			$current_galerie = new Galerie($dir_name);
-
-			if($test_xml_file['status']) {
-				$current_galerie = $this->get_existing_gallery($dir_name);
+			//$test_xml_file = $this->is_gallery_xml_file_exists($dir_name);
+			$current_galerie = $this->get_existing_gallery($dir_name);
+			/*
+			 if($test_xml_file['status']) {
+			$current_galerie = $this->get_existing_gallery($dir_name);
 			}
-				
+			*/
 			$lst_galeries[] = $current_galerie;
 		}
 
@@ -208,7 +160,20 @@ class Gallery_model_xml extends CI_Model {
 		return $value;
 
 	}
-
+	
+	private function is_gallery_xml_file_valid($gallery_name) {
+	
+		$value = array('mandatory'=>TRUE,'status'=>FALSE);
+		$existingxml = new DOMDocument();
+		
+		if(@$existingxml->load('./galeries/' . $gallery_name . '/' . $gallery_name.'GalleryContent.xml')) {
+			$value['status'] = TRUE;
+		}
+	
+		return $value;
+	
+	}
+	
 	public function save_gallery(Galerie $p_gallery) {
 
 		if($p_gallery->is_available()) {
@@ -347,20 +312,20 @@ class Gallery_model_xml extends CI_Model {
 		/**/
 
 		foreach ($source_images as $item) {
-				
+
 			$order++;
 			$media_path_lst = $item->getElementsByTagName('media_path');
 			foreach ($media_path_lst as $media_path) {
 				$filename = $url.$media_path->nodeValue;
 			}
 			$image = new Image($filename);
-				
+
 			$thumb_path_lst = $item->getElementsByTagName('thumb_path');
 			foreach ($thumb_path_lst as $thumb_path) {
 				$thumb_url = $url.$thumb_path->nodeValue;
 			}
 			$image->set_thumb_url($thumb_url);
-				
+
 			$desc_lst = $item->getElementsByTagName('description');
 			foreach ($desc_lst as $desc) {
 				$caption = $desc->nodeValue;
@@ -379,48 +344,35 @@ class Gallery_model_xml extends CI_Model {
 
 	}
 
-	private function is_gallery_xml_schema_valid($p_dir_name) {
-
-		$value = array('mandatory'=>TRUE,'status'=>FALSE);
-
-		$gallery_path = FCPATH.'galeries/' . $p_dir_name;
-		$xml_url = $gallery_path . '/' . $p_dir_name.'GalleryContent.xml';
-			
-		$existingxml = new DOMDocument('1.0');
-
-		$existingxml->load($xml_url);
-		$valide = @$existingxml->validate();
-
-		//$existingxml->schemaValidate(base_url(). 'wdzGalleryContent.dtd');
-		if($valide) {
-			$value['status'] = TRUE;
-		}
-
-		return $value;
-
-	}
-
 	public function init_gallery_xml($p_dir_name) {
 
-		$gallery_dir_exists = $this->is_gallery_dir_exists($p_dir_name); 
-		$gallery_xml_file_exists = is_gallery_xml_file_exists($p_dir_name);
-		
-		if(!$gallery_dir_exists['status']) {
+		$gallery_dir_exists = $this->is_gallery_dir_exists($p_dir_name);
 
-			//TODO Create gallery directory
-			
-		}
-		
 		$gallery_xml = new Galerie_xml_dao($p_dir_name);
-		
-		if($gallery_xml_file_exists['status']) {
 
-			$gallery_xml->initExistingDoc();
-			
-		} 
-		
-		echo $gallery_xml->save($xml_url);
-		
+		return $gallery_xml->save();
+
 	}
+	private function get_lst_gallery_dir() {
+		
+		$dir_galeries = array();
+		
+		if ($handle = opendir('./galeries'))
+		{
 
+			$cpt=0;
+
+			while (false !== ($file = readdir($handle)))
+			{
+				if($file != "." && $file != ".." ){
+					if(is_dir('./galeries' . '/' .$file))
+						$dir_galeries[$cpt]=$file;
+				}
+				$cpt++;
+			}
+			closedir($handle);
+
+		}
+		return $dir_galeries;
+	}
 }

@@ -2,8 +2,11 @@
 
 class Admin extends CI_Controller {
 
-	public function sort($gallery_name)
+	public function sort($gallery_name = '')
 	{
+		if($gallery_name === '') {
+			show_404();
+		}
 		$this->load->helper('html');
 		$this->load->helper('url');
 		$this->load->model('gallery_model_xml');
@@ -17,22 +20,28 @@ class Admin extends CI_Controller {
 		$this->load->view('templates/footer', $data);
 
 	}
-	public function init($gallery_name) {
-
+	public function init($gallery_name = '') {
+		
+		if($gallery_name === '') {
+			show_404();
+		}
+		
 		$this->load->helper('html');
 		$this->load->helper('url');
-		$this->load->library('xmlgallery');
-
+		$this->load->model('gallery_model_xml');
+		//$this->load->library('xmlgallery');
+		/*
 		$params = array('galleryname' => $gallery_name, 'initmode' => TRUE);
 		try {
 			$this->load->library('gallerycontent', $params);
 		} catch (Exception $e) {
 			show_error($e->getMessage());
 		}
-
+		*/
+		
 		$data['title'] = ucfirst($gallery_name); // Capitalize the first letter
 		$data['galleryname'] = $gallery_name;
-		$data['result'] = $this->xmlgallery->generateXml($gallery_name);
+		$data['result'] = $this->gallery_model_xml->init_gallery_xml($gallery_name);
 
 		$this->load->view('templates/header', $data);
 		$this->load->view('admin/init', $data);
@@ -73,7 +82,7 @@ class Admin extends CI_Controller {
 
 		$this->load->model('gallery_model_xml');
 		$data['lst_galeries'] = $this->gallery_model_xml->get_list_galeries();
-
+		$data['lst_not_avail_galeries'] = $this->gallery_model_xml->get_list_not_available_galeries();
 		$data['title'] = ucfirst('accueil'); // Capitalize the first letter
 
 		$this->load->view('templates/global/header', $data);
@@ -83,8 +92,12 @@ class Admin extends CI_Controller {
 		$this->load->view('templates/global/bottom', $data);
 			
 	}
-	public function status($gallery_name) {
-
+	public function status($gallery_name = '') {
+		
+		if($gallery_name === '') {
+			show_404();
+		}
+		
 		$this->load->helper('html');
 		$this->load->helper('url');
 
@@ -99,10 +112,10 @@ class Admin extends CI_Controller {
 		$table_lst[] = $this->check_lst_disp_values('Repertoire de la galerie', $check_lst['gallery_dir']);
 		$table_lst[] = $this->check_lst_disp_values('Repertoire des images', $check_lst['images_dir']);
 		$table_lst[] = $this->check_lst_disp_values('Repertoire des miniatures', $check_lst['thumbs_dir']);
-		$table_lst[] = $this->check_lst_disp_values('Fichier XML de la galerie', $check_lst['gallery_xml_file_exists']);
-		$table_lst[] = $this->check_lst_disp_values('Fichiers XML valide', $check_lst['gallery_xml_schema_valid']);
+		$table_lst[] = $this->check_lst_disp_values('Fichier XML present', $check_lst['gallery_xml_file_exists']);
+		$table_lst[] = $this->check_lst_disp_values('Fichier XML valide', $check_lst['gallery_xml_file_valid']);
 		$table_lst[] = $this->check_lst_disp_values('Fichiers de miniatures', $check_lst['thumb_files_ok']);
-
+		
 		$data['check_lst'] = $table_lst;
 		$this->load->view('templates/global/header', $data);
 		$this->load->view('admin/status', $data);

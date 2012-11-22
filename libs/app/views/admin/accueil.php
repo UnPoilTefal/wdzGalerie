@@ -10,7 +10,7 @@
 		        <div class="span5">
 		          <h4>Initialisation des fichiers XML :</h4>
 					<ul>
-					<?php foreach ($lst_galeries as $galerie):?>
+					<?php foreach ($lst_not_avail_galeries as $galerie):?>
 					<li><a href='<?php echo base_url(index_page() . "/admin/init/" . $galerie->get_dir_name());?>'>Initialisation de <?php echo $galerie->get_gallery_name(); ?></a></li>
 					<?php endforeach;?>
 					</ul>

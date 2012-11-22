@@ -23,7 +23,7 @@ class Image {
 		$this->parent_galerie = $p_parent_galerie;
 	}
 	
-	public function set_filename($p_filename) {
+	private function set_filename($p_filename) {
 		$this->filename = $p_filename;
 	}
 	
