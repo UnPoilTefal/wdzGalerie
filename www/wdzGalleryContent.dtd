@@ -1,6 +1,6 @@
 <!ELEMENT gallery (images)>
 <!ELEMENT images (image*)>
-<!ELEMENT image (caption?, thumb?)>
+<!ELEMENT image (caption, thumb)>
 <!ELEMENT caption (#PCDATA)>
 <!ELEMENT thumb EMPTY>
 <!ATTLIST gallery galleryname CDATA #REQUIRED>

@@ -12,15 +12,15 @@ class Gallery_model_xml extends CI_Model {
 		$galerie = new Galerie($dir_name);
 
 		if($this->is_gallery_ok($dir_name)) {
-			
+
 			$galerie->set_available(TRUE);
 
 			$galerie_dao = new Galerie_xml_dao($dir_name);
-			
+
 			$galerie->set_hl_pic($galerie_dao->get_hl_pic());
 
 			$galerie->set_gallery_name($galerie_dao->get_gallery_name());
-				
+
 			$galerie->set_remote_gallery($galerie_dao->get_remote());
 
 			$existingimages = $galerie_dao->get_lst_images();
@@ -64,42 +64,42 @@ class Gallery_model_xml extends CI_Model {
 
 		return $gallery_status;
 	}
-	
+
 	public function get_list_available_galeries() {
-		
+
 		$lst_avail = array();
-		
+
 		$lst_galeries = $this->get_list_galeries();
-		
+
 		foreach ($lst_galeries as $galerie) {
 			if($galerie->is_available()) {
 				array_push($lst_avail, $galerie);
 			}
 		}
-		
+
 		return $lst_avail;
 	}
 
 	public function get_list_not_available_galeries() {
-	
+
 		$lst_not_avail = array();
-	
+
 		$lst_galeries = $this->get_list_galeries();
-	
+
 		foreach ($lst_galeries as $galerie) {
 			if(!$galerie->is_available()) {
 				array_push($lst_not_avail, $galerie);
 			}
 		}
-	
+
 		return $lst_not_avail;
 	}
-	
+
 	public function get_list_galeries() {
 		$lst_galeries = array();
 
 		$dir_galeries = $this->get_lst_gallery_dir();
-		
+
 		foreach ($dir_galeries as $dir_name) {
 
 			//$test_xml_file = $this->is_gallery_xml_file_exists($dir_name);
@@ -160,24 +160,59 @@ class Gallery_model_xml extends CI_Model {
 		return $value;
 
 	}
-	
+
 	private function is_gallery_xml_file_valid($gallery_name) {
-	
+
 		$value = array('mandatory'=>TRUE,'status'=>FALSE);
 		$existingxml = new DOMDocument();
-		
+
 		if(@$existingxml->load('./galeries/' . $gallery_name . '/' . $gallery_name.'GalleryContent.xml')) {
-			$value['status'] = TRUE;
+
+			// Création d'une instance de la classe DOMImplementation
+			$imp = new DOMImplementation;
+
+			// Création d'une instance DOMDocumentType
+			$dtd = $imp->createDocumentType('gallery', '', base_url().'/wdzGalleryContent.dtd');
+			/*
+			// Création d'une instance DOMDocument
+			$document = $imp->createDocument("", "", $dtd);
+
+			// Définition des autres propriétés*/
+			$existingxml->encoding = 'UTF-8';
+			$existingxml->standalone = false;
+			//$existingxml->implementation = $dtd;
+			
+			//TODO Ajouter controle avec dtd
+			/*
+			// nous voulons un bel affichage
+			$document->formatOutput = true;
+			
+			$child = $document->importNode($existingxml->documentElement, TRUE);
+			$document->documentElement->appendChild($child, true);
+			
+			$document->saveHTMLFile("d:\ctrlxml.xml");
+			*/
+			//$existingxml->replaceChild($dtd, $existingxml->doctype);
+			
+			/*if($existingxml->validate()) {*/
+				$value['status'] = TRUE;
+			//}
+				
 		}
-	
+
 		return $value;
-	
+
 	}
-	
+
 	public function save_gallery(Galerie $p_gallery) {
 
 		if($p_gallery->is_available()) {
-			$gallery_path = FCPATH.'galeries/' . $p_gallery->get_dir_name();
+
+			$galerie_dao = new Galerie_xml_dao($p_gallery->get_dir_name());
+
+			$galerie_dao->updateFromGalerie($p_gallery);
+			/*
+			 $gallery_path = FCPATH.'galeries/' . $p_gallery->get_dir_name();
 
 			$file_images_directory = $gallery_path . '/images/';
 			$file_thumbs_directory = $gallery_path . '/thumbs/';
@@ -201,9 +236,9 @@ class Gallery_model_xml extends CI_Model {
 			$image_hl = $p_gallery->get_hl_pic();
 			$url_hl = '';
 			if(is_null($image_hl)) {
-				$url_hl = "http://placehold.it/210x110";
+			$url_hl = "http://placehold.it/210x110";
 			} else {
-				$url_hl = $image_hl->get_thumb_url();
+			$url_hl = $image_hl->get_thumb_url();
 			}
 			$rootAttr2->value = $url_hl;
 			$doc_root->appendChild($rootAttr2);
@@ -216,42 +251,45 @@ class Gallery_model_xml extends CI_Model {
 
 			foreach ($p_gallery->get_lst_images() as $image) {
 
-				$imageElem = $document_xml->createElement('image');
+			$imageElem = $document_xml->createElement('image');
 
-				$filenameAttr = $document_xml->createAttribute('filename');
-				$urlAttr = $document_xml->createAttribute('url');
-				$orderAttr = $document_xml->createAttribute('order');
-				$displayAttr = $document_xml->createAttribute('display');
+			$filenameAttr = $document_xml->createAttribute('filename');
+			$urlAttr = $document_xml->createAttribute('url');
+			$orderAttr = $document_xml->createAttribute('order');
+			$displayAttr = $document_xml->createAttribute('display');
 
-				// Value for the created attribute
-				$filenameAttr->value = $image->get_filename();
-				$urlAttr->value = $image->get_url();
-				$orderAttr->value = $image->get_order();
-				$displayAttr->value = $image->get_display();
+			// Value for the created attribute
+			$filenameAttr->value = $image->get_filename();
+			$urlAttr->value = $image->get_url();
+			$orderAttr->value = $image->get_order();
+			$displayAttr->value = $image->get_display();
 
-				// Don't forget to append it to the element
-				$imageElem->appendChild($filenameAttr);
-				$imageElem->appendChild($orderAttr);
-				$imageElem->appendChild($displayAttr);
-				$imageElem->appendChild($urlAttr);
+			// Don't forget to append it to the element
+			$imageElem->appendChild($filenameAttr);
+			$imageElem->appendChild($orderAttr);
+			$imageElem->appendChild($displayAttr);
+			$imageElem->appendChild($urlAttr);
 
-				$imageElem = $doc_images->appendChild($imageElem);
+			$imageElem = $doc_images->appendChild($imageElem);
 
-				$captionElem = $document_xml->createElement('caption', $image->get_caption());
-				$captionElem = $imageElem->appendChild($captionElem);
+			$captionElem = $document_xml->createElement('caption', $image->get_caption());
+			$captionElem = $imageElem->appendChild($captionElem);
 
-				$thumbElem = $document_xml->createElement('thumb');
-				$thumUrlAttr = $document_xml->createAttribute('thumburl');
-				$thumUrlAttr->value = $image->get_thumb_url();
-				$thumbElem->appendChild($thumUrlAttr);
-				$thumbElem = $imageElem->appendChild($thumbElem);
+			$thumbElem = $document_xml->createElement('thumb');
+			$thumUrlAttr = $document_xml->createAttribute('thumburl');
+			$thumUrlAttr->value = $image->get_thumb_url();
+			$thumbElem->appendChild($thumUrlAttr);
+			$thumbElem = $imageElem->appendChild($thumbElem);
 
-				$nb_existing_images ++;
+			$nb_existing_images ++;
 
 			}
 
 			$document_xml->save($xml_url);
 			chmod($xml_url, 0777);
+			*/
+
+			$galerie_dao->save();
 
 		} else {
 
@@ -354,9 +392,9 @@ class Gallery_model_xml extends CI_Model {
 
 	}
 	private function get_lst_gallery_dir() {
-		
+
 		$dir_galeries = array();
-		
+
 		if ($handle = opendir('./galeries'))
 		{
 

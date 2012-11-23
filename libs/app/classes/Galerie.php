@@ -14,7 +14,7 @@ class Galerie {
 		
 		$this->available = FALSE;
 		$this->dir_name = $p_dir_name;
-		$this->gallery_name = $p_dir_name . 'InitClass';
+		$this->gallery_name = $p_dir_name . '_InitClass';
 		$this->hl_pic = '';
 		$this->remote_gallery = FALSE;
 		$this->lst_images = array(); 

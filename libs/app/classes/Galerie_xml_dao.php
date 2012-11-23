@@ -23,13 +23,13 @@ class Galerie_xml_dao {
 		if($gallery_file_exists) {
 			$this->initExistingDoc();
 		}
-		$this->is_dtd_valid();		
+		$this->is_dtd_valid();
 	}
-	
+
 	public function is_dtd_valid() {
-		
+
 		return @$this->document->validate();
-		
+
 	}
 	private function initDocument($p_default_gallery_name) {
 
@@ -120,9 +120,17 @@ class Galerie_xml_dao {
 			$imagecontent = array();
 			$imagecontent['image'] = $n;
 			$caption = $n->getElementsByTagName('caption')->item(0);
-			$imagecontent['caption'] = $caption->nodeValue;
+			if(!is_null($caption)) {
+				$imagecontent['caption'] = $caption->nodeValue;
+			} else {
+				continue;
+			}
 			$thumb = $n->getElementsByTagName('thumb')->item(0);
-			$imagecontent['thumb'] = $thumb->getAttribute('thumburl');
+			if(!is_null($thumb)) {
+				$imagecontent['thumb'] = $thumb->getAttribute('thumburl');
+			} else {
+				continue;
+			}
 			$lst_images[] = $imagecontent;
 		}
 		return $lst_images;
@@ -217,5 +225,42 @@ class Galerie_xml_dao {
 	public function set_remote($p_remote) {
 		$this->document->documentElement->setAttribute('remote', $p_remote);
 	}
+	public function set_lst_images($p_lst_images){
+	
+		$this->clearImagesList();
 
+		foreach ($p_lst_images as $image) {
+			
+			$filename = $image->get_filename();
+			$order = $image->get_order();
+			$display = $image->get_display();
+			$caption = $image->get_caption();
+			$url = $image->get_url();
+			$url_thumb = $image->get_thumb_url();
+			
+			$this->addImage($filename, $order, $display, $caption, $url, $url_thumb);
+		}
+
+
+	}
+	public function updateFromGalerie(Galerie $p_gallery) {
+
+		//Mise à jour de l'entete
+		$this->set_gallery_name($p_gallery->get_gallery_name());
+		$hl_pic = '';
+		if(!is_null($p_gallery->get_hl_pic())) {
+			$hl_pic = $p_gallery->get_hl_pic();
+		}
+		$this->set_hl_pic($hl_pic);
+		$this->set_remote($p_gallery->is_remote_gallery());
+
+		//Mise à jour des images
+		$this->set_lst_images($p_gallery->get_lst_images());
+
+	}
+	function clearImagesList() {
+		while($this->images_node->hasChildNodes()) {
+			$this->images_node->removeChild($this->images_node->childNodes->item(0));
+		}
+	}
 }
