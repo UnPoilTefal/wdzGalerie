@@ -33,16 +33,16 @@ class Galerie_xml_dao {
 	}
 	private function initDocument($p_default_gallery_name) {
 
-		// Création d'une instance de la classe DOMImplementation
+		// Crï¿½ation d'une instance de la classe DOMImplementation
 		$imp = new DOMImplementation;
 
-		// Création d'une instance DOMDocumentType
+		// Crï¿½ation d'une instance DOMDocumentType
 		$dtd = $imp->createDocumentType('gallery', '', base_url().'/wdzGalleryContent.dtd');
 
-		// Création d'une instance DOMDocument
+		// Crï¿½ation d'une instance DOMDocument
 		$this->document = $imp->createDocument("", "", $dtd);
 
-		// Définition des autres propriétés
+		// Dï¿½finition des autres propriï¿½tï¿½s
 		$this->document->encoding = 'UTF-8';
 		$this->document->standalone = false;
 		// nous voulons un bel affichage
@@ -186,7 +186,11 @@ class Galerie_xml_dao {
 	public function get_remote() {
 		return $this->document->documentElement->getAttribute('remote');
 	}
-
+	
+	public function get_nb_existing_images() {
+		return $this->nb_existing_images;
+	}
+	
 	public function get_lst_images() {
 
 		$lst_images = array();
@@ -245,7 +249,7 @@ class Galerie_xml_dao {
 	}
 	public function updateFromGalerie(Galerie $p_gallery) {
 
-		//Mise à jour de l'entete
+		//Mise ï¿½ jour de l'entete
 		$this->set_gallery_name($p_gallery->get_gallery_name());
 		$hl_pic = '';
 		if(!is_null($p_gallery->get_hl_pic())) {
@@ -254,7 +258,7 @@ class Galerie_xml_dao {
 		$this->set_hl_pic($hl_pic);
 		$this->set_remote($p_gallery->is_remote_gallery());
 
-		//Mise à jour des images
+		//Mise ï¿½ jour des images
 		$this->set_lst_images($p_gallery->get_lst_images());
 
 	}
