@@ -6,7 +6,16 @@
         <script src="<?php echo base_url('js/global/main.js')?>"></script>
 		<script src="<?php echo base_url('js/jquery.fullscreenslides.js')?>"></script>
 		<script src="<?php echo base_url('js/coreGallery.js')?>"></script>
-        
+        <script>
+        $(document).ready(function() {
+            $("#cssSwitch li a").click(function() { 
+                $("link.switchable").attr("href",$(this).attr('rel'));
+                //$.cookie("css",$(this).attr('rel'), {expires: 30, path: '/'});
+                $('body').hide().fadeIn(1250);
+                return false;
+            });
+        });
+        </script>
         <script>
             var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
             (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];

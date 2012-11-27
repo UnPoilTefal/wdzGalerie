@@ -21,7 +21,7 @@ class Galerie_xml_dao {
 
 		$this->initDocument($p_dir_name);
 		if($gallery_file_exists) {
-			$this->initExistingDoc();
+			$this->initExistingDoc($p_dir_name);
 		}
 		$this->is_dtd_valid();
 	}
@@ -37,7 +37,7 @@ class Galerie_xml_dao {
 		$imp = new DOMImplementation;
 
 		// Cr�ation d'une instance DOMDocumentType
-		$dtd = $imp->createDocumentType('gallery', '', base_url().'/wdzGalleryContent.dtd');
+		$dtd = $imp->createDocumentType('root', '', base_url().'/wdzGalleryContent.dtd');
 
 		// Cr�ation d'une instance DOMDocument
 		$this->document = $imp->createDocument("", "", $dtd);
@@ -49,40 +49,44 @@ class Galerie_xml_dao {
 		$this->document->formatOutput = true;
 
 		//Init Entete par defaut
+		$root = $this->document->createElement('root');
+		$root = $this->document->appendChild($root);
 		$this->gallery_node = $this->document->createElement('gallery');
-		$this->gallery_node = $this->document->appendChild($this->gallery_node);
+		$this->gallery_node = $root->appendChild($this->gallery_node);
 		$galleryAttr = $this->document->createAttribute('galleryname');
 		$galleryAttr->value = $p_default_gallery_name;
 		$this->gallery_node->appendChild($galleryAttr);
 		$galleryAttr2 = $this->document->createAttribute('hl');
-		$galleryAttr2->value = 'init';
+		$galleryAttr2->value = '';
 		$this->gallery_node->appendChild($galleryAttr2);
 		$galleryAttr3 = $this->document->createAttribute('remote');
-		$galleryAttr3->value = '';
+		$galleryAttr3->value = 'FALSE';
 		$this->gallery_node->appendChild($galleryAttr3);
 		$this->images_node = $this->document->createElement('images');
 		$this->images_node = $this->gallery_node->appendChild($this->images_node);
 
 	}
-	private function initExistingDoc() {
+	private function initExistingDoc($p_default_galleryname) {
 
 		$existingxml = new DOMDocument();
 
 		if(@$existingxml->load($this->xml_url)) {
 
-			$existing_gallery_element = $existingxml->documentElement;
+			$existing_gallery_element = $existingxml->getElementsByTagName('gallery')->item(0);
 
 			//init entete with existing infos
-			if($existing_gallery_element->hasAttribute('galleryname')) {
+			if($existing_gallery_element->getAttribute('galleryname') === '') {
+				$this->set_gallery_name($p_default_galleryname);
+			} else {
 				$this->set_gallery_name($existing_gallery_element->getAttribute('galleryname'));
 			}
-
-			if($existing_gallery_element->hasAttribute('hl')) {
-				$this->set_hl_pic($existing_gallery_element->getAttribute('hl'));
-			}
-
-			if($existing_gallery_element->hasAttribute('remote')) {
+			
+			$this->set_hl_pic($existing_gallery_element->getAttribute('hl'));
+			
+			if($existing_gallery_element->getAttribute('remote') == 'TRUE' || $existing_gallery_element->getAttribute('remote') == 'FALSE') {
 				$this->set_remote($existing_gallery_element->getAttribute('remote'));
+			} else {
+				$this->set_remote('FALSE');
 			}
 
 			//import images
@@ -178,13 +182,13 @@ class Galerie_xml_dao {
 
 	//Getters
 	public function get_gallery_name() {
-		return $this->document->documentElement->getAttribute('galleryname');
+		return $this->gallery_node->getAttribute('galleryname');
 	}
 	public function get_hl_pic() {
-		return $this->document->documentElement->getAttribute('hl');
+		return $this->gallery_node->getAttribute('hl');
 	}
 	public function get_remote() {
-		return $this->document->documentElement->getAttribute('remote');
+		return $this->gallery_node->getAttribute('remote');
 	}
 	
 	public function get_nb_existing_images() {
@@ -219,15 +223,15 @@ class Galerie_xml_dao {
 
 	//Setters
 	public function set_gallery_name($p_gallery_name) {
-		$this->document->documentElement->setAttribute('galleryname', $p_gallery_name);
+		$this->gallery_node->setAttribute('galleryname', $p_gallery_name);
 	}
 
 	public function set_hl_pic($p_hl_pic) {
-		$this->document->documentElement->setAttribute('hl', $p_hl_pic);
+		$this->gallery_node->setAttribute('hl', $p_hl_pic);
 	}
 
 	public function set_remote($p_remote) {
-		$this->document->documentElement->setAttribute('remote', $p_remote);
+		$this->gallery_node->setAttribute('remote', $p_remote);
 	}
 	public function set_lst_images($p_lst_images){
 	
@@ -256,8 +260,11 @@ class Galerie_xml_dao {
 			$hl_pic = $p_gallery->get_hl_pic();
 		}
 		$this->set_hl_pic($hl_pic);
-		$this->set_remote($p_gallery->is_remote_gallery());
-
+		if($p_gallery->is_remote_gallery()) {
+			$this->set_remote('TRUE');
+		} else {
+			$this->set_remote('FALSE');
+		}
 		//Mise � jour des images
 		$this->set_lst_images($p_gallery->get_lst_images());
 

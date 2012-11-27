@@ -1,3 +1,4 @@
+<!ELEMENT root (gallery)>
 <!ELEMENT gallery (images)>
 <!ELEMENT images (image*)>
 <!ELEMENT image (caption, thumb)>
@@ -5,7 +6,7 @@
 <!ELEMENT thumb EMPTY>
 <!ATTLIST gallery galleryname CDATA #REQUIRED>
 <!ATTLIST gallery hl CDATA "http://placehold.it/210x110">
-<!ATTLIST gallery remote CDATA #REQUIRED>
+<!ATTLIST gallery remote (TRUE|FALSE) #REQUIRED>
 <!ATTLIST image filename CDATA #REQUIRED>
 <!ATTLIST image order CDATA #REQUIRED>
 <!ATTLIST image display CDATA "1">
