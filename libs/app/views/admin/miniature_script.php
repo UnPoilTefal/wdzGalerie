@@ -26,6 +26,8 @@ $(document).ready(function(){
 		                
 		                me.text(Math.floor(current_perc)+'%');
 		            });
+	            } else {
+		           $("#message").append("<div class='alert'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Warning!</strong> Il n'y a aucune miniature à generer !</div>"); 
 	            }
 	        });
 		event.preventDefault();

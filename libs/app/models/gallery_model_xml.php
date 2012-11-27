@@ -9,7 +9,43 @@ class Gallery_model_xml extends CI_Model {
 	{
 		parent::__construct();
 	}
+	public function get_pagined_existing_gallery($p_dir_name, $p_num_row = 4, $p_num_by_row = 6) {
+		
+		$pagined_galerie = array();
+		
+		$galerie = $this->get_existing_gallery($p_dir_name);
+		
+		$num_images_by_page = $p_num_row * $p_num_by_row;
+		
+		$page_number = 1;
+		//$image_number = 1;
+		$row = 1;
+		$col = 1;
+		$pagined_galerie['num_row'] = $p_num_row;
+		$pagined_galerie['num_by_row'] = $p_num_by_row;
+		$pagined_galerie['gallery_name'] = $galerie->get_gallery_name();
+		
+		foreach ($galerie->get_lst_images() as $image) {
 
+			$pagined_galerie['pages'][$page_number]['num_min'] = (($page_number - 1) * $num_images_by_page) + 1;
+			$pagined_galerie['pages'][$page_number]['num_max'] = $page_number * $num_images_by_page;
+				
+			$pagined_galerie['pages'][$page_number]['row_'.$row]['col_'.$col] = $image;
+			$col++;
+			if($col > $p_num_row ) {
+				$col = 1;
+				$row++;
+			}
+			if($row > $p_num_row) {
+				$row = 1;
+				$page_number++;
+			}
+			
+		}
+		
+		$pagined_galerie['max_page'] = $page_number;
+		
+	}
 	public function get_existing_gallery($dir_name) {
 		$galerie = new Galerie($dir_name);
 

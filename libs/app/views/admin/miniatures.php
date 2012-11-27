@@ -12,6 +12,7 @@
 
 			<div class='span4 offset2'>
 				<h4>G&eacute;n&eacute;ration des miniatures :</h4>
+				<div id='message'></div>
 				<div class="progress">
 					<div class="bar" style="width: 0%;"
 						max-perc='<?php echo count($lst_filename['lst_miniatures']);?>'></div>

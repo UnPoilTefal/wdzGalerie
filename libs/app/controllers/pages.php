@@ -2,9 +2,11 @@
 
 class Pages extends CI_Controller {
 
-	public function view($gallery_name = '')
-	{
-
+	public function view($gallery_name = '', $p_page = 1) {
+		
+		$num_by_row = 6;
+		$num_row = 4;
+		
 		if ($gallery_name == '')
 		{
 			show_404(); //TODO personaliser la page
@@ -16,7 +18,7 @@ class Pages extends CI_Controller {
 			$this->load->model('gallery_model_xml');
 
 			$data['title'] = ucfirst($gallery_name); // Capitalize the first letter
-			$data['gallery'] = $this->gallery_model_xml->get_existing_gallery($gallery_name);
+			$data['pagined_galerie'] = $this->gallery_model_xml->get_pagined_existing_gallery($gallery_name, $num_row, $num_by_row);
 			$data['lst_galeries'] = $this->gallery_model_xml->get_list_galeries();
 			$this->load->view('templates/global/header', $data);
 			if($data['gallery']->is_available()) {
