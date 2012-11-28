@@ -20,8 +20,9 @@ class Pages extends CI_Controller {
 			$data['title'] = ucfirst($gallery_name); // Capitalize the first letter
 			$data['pagined_galerie'] = $this->gallery_model_xml->get_pagined_existing_gallery($gallery_name, $num_row, $num_by_row);
 			$data['lst_galeries'] = $this->gallery_model_xml->get_list_galeries();
+			$galerie = $data['pagined_galerie']['galerie'];
 			$this->load->view('templates/global/header', $data);
-			if($data['gallery']->is_available()) {
+			if($galerie->is_available()) {
 				$this->load->view('pages/view', $data);
 			} else {
 				$this->load->view('pages/gallery_not_available', $data);

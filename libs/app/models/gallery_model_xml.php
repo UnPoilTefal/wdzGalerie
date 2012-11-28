@@ -21,18 +21,26 @@ class Gallery_model_xml extends CI_Model {
 		//$image_number = 1;
 		$row = 1;
 		$col = 1;
+		$num_for_page = 1;		
 		$pagined_galerie['num_row'] = $p_num_row;
 		$pagined_galerie['num_by_row'] = $p_num_by_row;
+		$pagined_galerie['galerie'] = $galerie;
 		$pagined_galerie['gallery_name'] = $galerie->get_gallery_name();
+		$pagined_galerie['is_available'] = $galerie->is_available();
 		
+		$total_images = 0;
+		$pagined_galerie['pages'] = array();
 		foreach ($galerie->get_lst_images() as $image) {
-
+			
 			$pagined_galerie['pages'][$page_number]['num_min'] = (($page_number - 1) * $num_images_by_page) + 1;
-			$pagined_galerie['pages'][$page_number]['num_max'] = $page_number * $num_images_by_page;
+			$pagined_galerie['pages'][$page_number]['num_max'] = $num_for_page;
 				
-			$pagined_galerie['pages'][$page_number]['row_'.$row]['col_'.$col] = $image;
+			$pagined_galerie['pages'][$page_number]['rows'][$row]['images'][] = $image;
+			$total_images++;
+			$num_for_page++;
 			$col++;
-			if($col > $p_num_row ) {
+			
+			if($col > $p_num_by_row) {
 				$col = 1;
 				$row++;
 			}
@@ -42,8 +50,9 @@ class Gallery_model_xml extends CI_Model {
 			}
 			
 		}
-		
+		$pagined_galerie['total_images'] = $total_images;
 		$pagined_galerie['max_page'] = $page_number;
+		return $pagined_galerie;
 		
 	}
 	public function get_existing_gallery($dir_name) {
