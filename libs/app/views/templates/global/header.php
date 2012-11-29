@@ -9,8 +9,12 @@
 		<title><?php echo $title ?> - wdzGalerie</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<?php
-		echo link_tag('css/global/bootstrap.min.css');
+		
+		<link rel="stylesheet" type="text/css" href="<?php echo base_url('css/global/bootstrap.min.css');?>" class="switchable" />
+        
+        <?php
+		//echo link_tag('css/global/bootstrap.min.css');
+		//echo link_tag('css/cyborg/bootstrap.min.css');
 		echo link_tag('css/global/bootstrap-responsive.min.css');
 		echo link_tag('css/global/main.css');
 		echo link_tag('css/fullscreenstyle.css');
@@ -34,9 +38,18 @@
                     <div class="nav-collapse collapse">
                         <ul class="nav">
                             <li class="active"><a href="<?php echo base_url()?>">Accueil</a></li>
-                            <li><a href="<?php echo base_url(index_page() . '/admin/accueil')?>">Admin</a></li>
+                            <li><a href="<?php echo base_url(index_page() . '/admin/accueil')?>">Administration</a></li>
+                            <li class="dropdown">
+                            	<a href="#theme" class="dropdown-toggle" data-toggle="dropdown">Theme</a>
+                            	<ul id="cssSwitch" class="dropdown-menu">
+				                  <li><a href="#" rel="<?php echo base_url('css/global/bootstrap.min.css');?>">Defaut</a></li>
+				                  <li class="divider"></li>
+				                  <li><a href="#" rel="<?php echo base_url('css/slate/bootstrap.min.css');?>">Slate</a></li>
+				                  <li><a href="#" rel="<?php echo base_url('css/cyborg/bootstrap.min.css');?>">Cyborg</a></li>
+				                  <li><a href="#" rel="<?php echo base_url('css/spacelab/bootstrap.min.css');?>">Spacelab</a></li>
+				                </ul>
+                            </li>
                             <li><a href="#about">About</a></li>
-                            <li><a href="#contact">Contact</a></li>
                         </ul>
                         <form class="navbar-form pull-right">
                             <input class="span2" type="text" placeholder="Email">

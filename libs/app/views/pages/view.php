@@ -4,9 +4,9 @@
             	<div class="span2">
             	</div>
             	<div class="span10">
-            	<div class='row'>
+            	<div class='row-fluid'>
 			            <div class="page-header">
-			                <h1><?php echo $gallery['name'];?></h1>
+			                <h4><?php echo $pagined_galerie['galerie']->get_gallery_name();?></h4>
 			            </div>
 			    </div>
 	            </div>
@@ -16,30 +16,27 @@
 				<div class="span2">
 					<ul class="nav nav-list">
 	  					<li class="nav-header">Galeries</li>
-						<?php foreach ($lst_galeries as $galerie):?>
-						<li <?php if($galerie['dir_name'] == $gallery['name']) { echo 'class="active"';} ?>><a href="<?php echo  base_url(index_page() . '/pages/view/' . $galerie['dir_name']);?>"><?php echo $galerie['gallery_name'];?></a></li>
+						<?php foreach ($lst_galeries as $curr_galerie):?>
+						<li <?php if($curr_galerie->get_dir_name() == $pagined_galerie['galerie']->get_dir_name()) { echo 'class="active"';} ?>><a href="<?php echo  base_url(index_page() . '/pages/view/' . $curr_galerie->get_dir_name());?>"><?php echo $curr_galerie->get_gallery_name();?></a></li>
 	  					<?php endforeach;?>
 	 				</ul>
 				</div>
 			
-				<div class="span10">
-        	
-	        	<div class='row'>
-				<ul class="thumbnails">
-				<?php $count = 0;?>
-				  <?php foreach ($gallery['lst_images'] as $image):?>
-				  <?php $count++ ?>
-				  <li class="span2">
-				      <a class='thumbnail' rel='gallery' title='<?php echo $image["caption"]; ?>' href='<?php echo $image["src"]; ?>'><img class="fade" src="<?php echo $image['thumb'];?>" alt="<?php echo $image['caption']; ?>"></a>
-				  </li>
-				  <?php if($count === 6) {
-				  	$count = 0;
-				  	echo "</ul></div><div class='row'><ul class='thumbnails'>";
-				  }
-				  ?>
-				  <?php endforeach;?>
-				</ul>
-			 </div>
-			 </div>
+				<div id='content' class="span10">
+	        		<?php foreach ($pagined_galerie['pages'] as $num_page=>$page):?>
+		        	<div <?php echo "id='page_".$num_page."'" . " class='page'"; if($num_page > 1) {echo "style='display: none;'";}?>>
+						<?php foreach ($page['rows'] as $row):?> 
+			        	<ul class="thumbnails">
+						  <?php foreach ($row['images'] as $image):?>
+						  <li class="span2">
+						      <a class='thumbnail' rel='gallery' title='<?php echo $image->get_caption(); ?>' href='<?php echo $image->get_url(); ?>'><img class="fade" src="<?php echo $image->get_thumb_url();?>" alt="<?php echo $image->get_caption() ?>"></a>
+						  </li>
+						  <?php endforeach;?>
+						</ul>
+						<?php endforeach;?>
+						<div><span class='badge'><?php echo $page['num_min'];?> - <?php echo $page['num_max'];?> / <?php echo $pagined_galerie['total_images'];?></span></div>
+				 	</div>
+				 	<?php endforeach;?>
+			 	</div>
 			</div>        
 			 
