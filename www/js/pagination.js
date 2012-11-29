@@ -82,9 +82,11 @@
 						.addClass('disabled')
 						.appendTo(ul)
 						.click(function(){
-							clicked = true;
-							page--;
-							show();
+							if (!$(this).hasClass('disabled')) {
+								clicked = true;
+								page--;
+								show();
+							}
 							return false;
 						});
 				};
@@ -93,10 +95,12 @@
 					for(var i=1;i<=pages;i++){
 					$('<li data-index="'+ i +'"><a href="#">'+ i +'</a></li>')
 						.appendTo(ul)
-						.click(function(){	
-							clicked = true;
-							page = $(this).attr('data-index');
-							show();
+						.click(function(){
+							if (!$(this).hasClass('disabled')) {	
+								clicked = true;
+								page = $(this).attr('data-index');
+								show();
+							}
 							return false;
 						});					
 					};				
@@ -107,9 +111,12 @@
 						.addClass('disabled')
 						.appendTo(ul)
 						.click(function(){
-							clicked = true;			
-							page++;
-							show();
+							
+							if (!$(this).hasClass('disabled')) {
+								clicked = true;			
+								page++;
+								show();
+							}
 							return false;
 						});
 				};
