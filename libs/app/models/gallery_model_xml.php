@@ -258,23 +258,10 @@ class Gallery_model_xml extends CI_Model {
 			// D�finition des autres propri�t�s
 			$existingxml->encoding = 'UTF-8';
 			$existingxml->standalone = false;
-			//$existingxml->implementation = $dtd;
 			$node = $existingxml->getElementsByTagName("gallery")->item(0);
-			//TODO Ajouter controle avec dtd
 			
 			$node = $document->importNode($node, true);
-			// Et on l'ajoute dans le le noeud racine "<root>"
 			$document->documentElement->appendChild($node);
-			/*
-			// nous voulons un bel affichage
-			$document->formatOutput = true;
-				
-			$child = $document->importNode($existingxml->documentElement, TRUE);
-			$document->documentElement->appendChild($child, true);
-				*/
-			$document->saveHTMLFile("d:\ctrlxml.xml");
-			
-			//$existingxml->replaceChild($dtd, $existingxml->doctype);
 				
 			if(@$document->validate()) {
 			$value['status'] = TRUE;
@@ -554,8 +541,8 @@ class Gallery_model_xml extends CI_Model {
 			if ( $ratio > 1 )
 			{
 				// Paysage
-				$new_width  = 220;//$max_size;
-				$new_height = round( 220 / $ratio );
+				$new_width  = $max_size;//$max_size;
+				$new_height = round( $max_size / $ratio );
 			}
 			else
 			{
@@ -643,6 +630,19 @@ class Gallery_model_xml extends CI_Model {
 	
 	public function create_thumb($galerie_name, $filename) {
 		
-		return $this->imagethumb(urldecode($galerie_name), urldecode($filename),'',220);
+		return $this->imagethumb(urldecode($galerie_name), urldecode($filename),'',210);
 	}
+	
+	public function get_list_galeries_names() {
+		
+		$lst_avail_galeries = $this->get_list_available_galeries();
+		$lst_names = array();
+		
+		foreach ($lst_avail_galeries as $galerie) {
+			$lst_names[] = $galerie->get_gallery_name();
+		}
+		
+		return $lst_names;
+	}
+	
 }

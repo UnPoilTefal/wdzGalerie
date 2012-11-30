@@ -2,7 +2,7 @@
 
 class Pages extends CI_Controller {
 
-	public function view($gallery_name = '', $p_page = 1) {
+	public function view($gallery_name = '') {
 		
 		$num_by_row = 6;
 		$num_row = 4;
@@ -37,12 +37,27 @@ class Pages extends CI_Controller {
 
 	public function accueil() {
 
-		$this->load->helper('html');
-		$this->load->helper('url');
-
+		$num_by_row = 4;
+		
+		$this->load->helper(array('html', 'url'));
 		$this->load->model('gallery_model_xml');
-
-		$data['lst_galeries'] = $this->gallery_model_xml->get_list_available_galeries();
+		
+		$lst_avail_galeries = $this->gallery_model_xml->get_list_available_galeries();
+		$row_galeries = array();
+		
+		$row = 1;
+		$col = 1;
+		foreach ($lst_avail_galeries as $curr_galerie) {
+			$row_galeries[$row][] = $curr_galerie;
+			$col++;
+			if($col > $num_by_row) {
+				$col = 1;
+				$row++;
+			}
+		}
+		
+		
+		$data['lst_galeries'] = $row_galeries;
 
 		$data['title'] = ucfirst('accueil'); // Capitalize the first letter
 
@@ -53,4 +68,14 @@ class Pages extends CI_Controller {
 		$this->load->view('templates/global/bottom', $data);
 
 	}
+	
+	public function lst_galeries_names() {
+		$this->load->helper(array('html', 'url'));
+		$this->load->model('gallery_model_xml');
+		$lst_avail_galeries_names = $this->gallery_model_xml->get_list_galeries_names();
+		
+		echo json_encode($lst_avail_galeries_names);
+		
+	}
+	
 }

@@ -49,12 +49,9 @@
 				                  <li><a href="#" rel="<?php echo base_url('css/spacelab/bootstrap.min.css');?>">Spacelab</a></li>
 				                </ul>
                             </li>
-                            <li><a href="#about">About</a></li>
                         </ul>
-                        <form class="navbar-form pull-right">
-                            <input class="span2" type="text" placeholder="Email">
-                            <input class="span2" type="password" placeholder="Password">
-                            <button type="submit" class="btn">Valider</button>
+                        <form class="navbar-search pull-right">
+                             <input type="text" class="search-query" placeholder="Rechercher une galerie" data-provide='typeahead'>
                         </form>
                     </div><!--/.nav-collapse -->
                 </div>

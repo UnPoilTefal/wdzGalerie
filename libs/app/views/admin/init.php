@@ -3,7 +3,7 @@
 	$(document).ready(function(){
 		$( "#retour" ).button();
 		$( "#retour" ).click(function( event ) {
-			$(location).attr('href','<?=base_url(index_page());?>');
+			$(location).attr('href','<?=base_url(index_page().'/admin/accueil');?>');
 			event.preventDefault();
 		});
 	});

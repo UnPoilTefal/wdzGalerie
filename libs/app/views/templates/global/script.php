@@ -15,6 +15,14 @@
                 $('body').hide().fadeIn(1250);
                 return false;
             });
+            
+               $.get('<?php echo base_url(index_page() . '/pages/lst_galeries_names');?>', function(data){
+            	   $('.search-query').typeahead({
+                       source: data
+                   });
+               }, "json");
+               
+            
         });
         </script>
         <script>

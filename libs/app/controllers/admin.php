@@ -34,10 +34,12 @@ class Admin extends CI_Controller {
 		$data['galleryname'] = $gallery_name;
 		$data['result'] = $this->gallery_model_xml->init_gallery_xml($gallery_name);
 
-		$this->load->view('templates/header', $data);
+		$this->load->view('templates/global/header', $data);
 		$this->load->view('admin/init', $data);
-		$this->load->view('templates/footer', $data);
-
+		$this->load->view('templates/global/footer', $data);
+		$this->load->view('templates/global/script', $data);
+		$this->load->view('templates/global/bottom', $data);
+		
 
 	}
 
@@ -82,8 +84,7 @@ class Admin extends CI_Controller {
 	}
 	public function accueil() {
 
-		$this->load->helper('html');
-		$this->load->helper('url');
+		$this->load->helper(array('html','url'));
 
 		$this->load->model('gallery_model_xml');
 		$data['lst_galeries'] = $this->gallery_model_xml->get_list_galeries();
