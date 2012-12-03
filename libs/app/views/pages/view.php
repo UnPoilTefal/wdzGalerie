@@ -24,7 +24,7 @@
 			
 				<div id='content' class="span10">
 	        		<?php foreach ($pagined_galerie['pages'] as $num_page=>$page):?>
-		        	<div <?php echo "id='page_".$num_page."'" . " class='page'"; if($num_page > 1) {echo "style='display: none;'";}?>>
+		        	<div <?php echo "id='page_".$num_page."'" . " class='page' "; if($num_page > 1) {echo "style='display: none;'";}?>>
 						<?php foreach ($page['rows'] as $row):?> 
 			        	<ul class="thumbnails">
 						  <?php foreach ($row['images'] as $image):?>

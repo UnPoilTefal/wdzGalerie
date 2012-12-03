@@ -630,7 +630,7 @@ class Gallery_model_xml extends CI_Model {
 	
 	public function create_thumb($galerie_name, $filename) {
 		
-		return $this->imagethumb(urldecode($galerie_name), urldecode($filename),'',210);
+		return $this->imagethumb($galerie_name, $filename,'',210);
 	}
 	
 	public function get_list_galeries_names() {
@@ -644,5 +644,23 @@ class Gallery_model_xml extends CI_Model {
 		
 		return $lst_names;
 	}
+	
+	public function search_galerie_by_name($p_gallery_name) {
+		log_message('debug', 'search_galerie_by_name  : '. $p_gallery_name);
+		$galerie_dir_name = '';
+		$lst_avail_galeries = $this->get_list_available_galeries();
+		//TODO Gérer le problème d'encodage sur la recup du fichier XML
+		foreach ($lst_avail_galeries as $galerie) {
+			log_message('debug', 'Search galerie name : ' . html_entity_decode($galerie->get_gallery_name()) . ' - dir : ' . $galerie->get_dir_name());
+			if($galerie->get_gallery_name() === $p_gallery_name) {
+				$galerie_dir_name = $galerie->get_dir_name();
+				break;
+			}
+		}
+	
+		return $galerie_dir_name;
+	}
+	
+	
 	
 }

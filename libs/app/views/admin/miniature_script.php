@@ -1,12 +1,12 @@
 <script>
 $(document).ready(function(){
-
+	
 	$("#lancer").click(function( event ) {
-
-	        $('.progress .bar').each(function() {
-	            var me = $(this);
+				$(this).button({ disabled: true });
+				$(this).button({ label: "Traitement en cours..." });
+	            var me = $('.progress .bar');
 	            var max_perc = 100;
-	            var url = '<?php echo base_url(index_page().'/admin/genminiature');?>'
+	            var url = '<?php echo base_url(index_page().'/admin/genminiature');?>';
 	            var perc = me.attr("max-perc");
 	            if(perc>0) {
 					var current_perc = 0;
@@ -29,8 +29,8 @@ $(document).ready(function(){
 	            } else {
 		           $("#message").append("<div class='alert'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Warning!</strong> Il n'y a aucune miniature à generer !</div>"); 
 	            }
-	        });
 		event.preventDefault();
+		$(this).button({ label: "Termin&eacute;!" });
 	});
 
 });

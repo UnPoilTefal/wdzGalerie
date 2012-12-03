@@ -50,8 +50,11 @@
 				                </ul>
                             </li>
                         </ul>
-                        <form class="navbar-search pull-right">
-                             <input type="text" class="search-query" placeholder="Rechercher une galerie" data-provide='typeahead'>
+                        <form id='searchForm' class="navbar-search pull-right">
+                        	<div class="input-append">
+                             <input id="searchField" type="text" class="search-query" placeholder="Rechercher une galerie" data-provide='typeahead'>
+                             <span class="add-on"><i class="icon-search"></i></span>
+                             </div>
                         </form>
                     </div><!--/.nav-collapse -->
                 </div>

@@ -17,10 +17,7 @@
 					<div class="bar" style="width: 0%;"
 						max-perc='<?php echo count($lst_filename['lst_miniatures']);?>'></div>
 				</div>
-				<p>
-					<a id='lancer' href='#'
-						class="btn btn-primary">Lancer</a>
-				</p>
+				<button id='lancer' type="button" data-loading-text="Creation..." class="btn btn-primary" >Lancer</button>
 			</div>
 		</div>
 	</div>

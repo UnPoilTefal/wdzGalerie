@@ -78,4 +78,14 @@ class Pages extends CI_Controller {
 		
 	}
 	
+	public function get_galerie_url_by_name($p_gallery_name) {
+		
+		log_message('debug','get_galerie_url_by_name : ' . $p_gallery_name);
+		$this->load->helper(array('html', 'url'));
+		$this->load->model('gallery_model_xml');
+				
+		echo base_url(index_page().'/pages/view/' . $this->gallery_model_xml->search_galerie_by_name(urldecode($p_gallery_name))); 
+	
+	}
+	
 }

@@ -74,7 +74,7 @@ class Admin extends CI_Controller {
 
 		//$data = $_POST['lst_filename'];
 
-		$return_value = $this->gallery_model_xml->create_thumb($galerie, $filename);
+		$return_value = $this->gallery_model_xml->create_thumb(urldecode($galerie), urldecode($filename));
 		if($return_value) {
 			echo 'TRUE';
 		} else {
