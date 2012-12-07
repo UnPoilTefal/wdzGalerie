@@ -12,11 +12,6 @@
 			step:1
 		});
 		
-		/*
-		$(window).resize(function() {
-			updateSize();
-		});
-		*/
 	});
 
 </script>

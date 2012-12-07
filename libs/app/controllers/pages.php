@@ -4,47 +4,80 @@ class Pages extends CI_Controller {
 
 	public function view($gallery_name = '') {
 		
-		$num_by_row = 6;
-		$num_row = 4;
-		
 		if ($gallery_name == '')
 		{
 			show_404(); //TODO personaliser la page
 		} else {
-
-			$this->load->helper('html');
-			//$this->load->library('displaycontent');
-			$this->load->helper('url');
+			
+			$this->load->library('user_agent');
+			$this->load->helper(array('html','url'));
 			$this->load->model('gallery_model_xml');
+			
+			//Chargement des valeurs par defaut
+			$num_by_row = 6;
+			$num_row = 4;
 
-			$data['title'] = ucfirst($gallery_name); // Capitalize the first letter
-			$data['pagined_galerie'] = $this->gallery_model_xml->get_pagined_existing_gallery($gallery_name, $num_row, $num_by_row);
+			$template_type = 'global';
 			$data['lst_galeries'] = $this->gallery_model_xml->get_list_galeries();
-			$galerie = $data['pagined_galerie']['galerie'];
-			$this->load->view('templates/global/header', $data);
-			if($galerie->is_available()) {
-				$this->load->view('pages/view', $data);
-			} else {
-				$this->load->view('pages/gallery_not_available', $data);
+				
+			//Override
+			if ($this->agent->is_mobile()) {
+					
+				
+				if ($this->agent->is_mobile('iphone'))
+				{
+					$template_type = 'mobile';
+					$num_by_row = 2;
+					$num_row = 0;
+								
+				}
+				
 			}
+
+			$data['pagined_galerie'] = $this->gallery_model_xml->get_pagined_existing_gallery($gallery_name, $num_row, $num_by_row);
+			$galerie = $data['pagined_galerie']['galerie'];
+				
+			$data['title'] = ucfirst($galerie->get_gallery_name()); // Capitalize the first letter
+			
+			$this->load->view('templates/'. $template_type . '/header', $data);
+			if($galerie->is_available()) {
+				$this->load->view('pages/'. $template_type . '/view', $data);
+			} else {
+				$this->load->view('pages/'. $template_type . '/gallery_not_available', $data);
+			}
+			
+			$this->load->view('templates/'. $template_type . '/footer', $data);
+			$this->load->view('templates/'. $template_type . '/script', $data);
+			$this->load->view('pages/'. $template_type . '/screen_script', $data);
+			$this->load->view('templates/'. $template_type . '/bottom', $data);
+				
 		}
-		$this->load->view('templates/global/footer', $data);
-		$this->load->view('templates/global/script', $data);
-		$this->load->view('pages/screen_script', $data);
-		$this->load->view('templates/global/bottom', $data);
 
 	}
 
 	public function accueil() {
-
-		$num_by_row = 4;
 		
+		$this->load->library('user_agent');
 		$this->load->helper(array('html', 'url'));
 		$this->load->model('gallery_model_xml');
-		
+
+		$template_type = 'global';
 		$lst_avail_galeries = $this->gallery_model_xml->get_list_available_galeries();
 		$row_galeries = array();
+		$num_by_row = 4;
 		
+		//Override
+		if ($this->agent->is_mobile()) {
+		
+			if ($this->agent->is_mobile('iphone'))
+			{
+				$template_type = 'mobile';
+				$num_by_row = 2;
+				
+			}
+		
+		}
+
 		$row = 1;
 		$col = 1;
 		foreach ($lst_avail_galeries as $curr_galerie) {
@@ -56,16 +89,15 @@ class Pages extends CI_Controller {
 			}
 		}
 		
-		
 		$data['lst_galeries'] = $row_galeries;
 
 		$data['title'] = ucfirst('accueil'); // Capitalize the first letter
-
-		$this->load->view('templates/global/header', $data);
-		$this->load->view('pages/accueil', $data);
-		$this->load->view('templates/global/footer', $data);
-		$this->load->view('templates/global/script', $data);
-		$this->load->view('templates/global/bottom', $data);
+		
+		$this->load->view('templates/'. $template_type . '/header', $data);
+		$this->load->view('pages/'. $template_type . '/accueil', $data);
+		$this->load->view('templates/'. $template_type . '/footer', $data);
+		$this->load->view('templates/'. $template_type . '/script', $data);
+		$this->load->view('templates/'. $template_type . '/bottom', $data);
 
 	}
 	

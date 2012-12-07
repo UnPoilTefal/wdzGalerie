@@ -46,8 +46,8 @@
 			$(children).each(function(i){
 				var child = $(this);
 				
-				child.hide("slide", { direction: "left"  }, 300);
-				if(i>=lower && i<upper){ setTimeout(function(){ child.show('slide',{ direction: "right"  }, 500); }, options.delay ); }
+				child.fadeOut(300);
+				if(i>=lower && i<upper){ setTimeout(function(){ child.fadeIn(500); }, options.delay ); }
 				if(options.nextprev){
 					if(upper >= count) { next.addClass('disabled'); } else { next.removeClass('disabled'); };
 					if(lower >= 1) { prev.removeClass('disabled'); } else { prev.addClass('disabled'); };

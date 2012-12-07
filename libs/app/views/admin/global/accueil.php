@@ -1,12 +1,31 @@
         <div class="container">
 
             <div class="row">
-            <div class="page-header span12">
+            <div class="page-header">
                 <h1>Administration des galeries</h1>
             </div>
 			</div>
 			
             <div class="row">
+            	<div class='span8 offset2'>
+	            <table class="table table-striped table-bordered">
+	              <thead>
+	                <tr>
+	                  <th>Galeries</th>
+	                  <th>Edition</th>
+	                </tr>
+	              </thead>
+	              <tbody>
+	              	<?php foreach ($lst_galeries as $galerie):?>
+	                <tr>
+	                  <td><?php echo $galerie->get_gallery_name();?></td>
+	                  <td><a class="btn btn-primary" href="<?php echo base_url(index_page() . "/admin/edit_gallery/" . $galerie->get_dir_name());?>"><i class="icon-cog icon-white"></i> Editer</a></td>
+	                </tr>
+	                <?php endforeach;?>
+	                </tbody>
+	            </table>
+            </div>
+            <!-- 
 		        <div class="span4">
 		        <div class='well well-small'>
 		          <h4>Initialisation des fichiers XML :</h4>
@@ -47,4 +66,5 @@
 					</ul>
 		        </div>
 		        </div>
+		         -->
 		      </div>

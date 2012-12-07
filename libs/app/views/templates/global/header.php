@@ -34,10 +34,10 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </a>
-                    <a class="brand" href="<?php echo base_url()?>">wdzGalerie</a>
+                    <a class="brand" href="<?php echo base_url(index_page() . '/pages/accueil')?>">wdzGalerie</a>
                     <div class="nav-collapse collapse">
                         <ul class="nav">
-                            <li class="active"><a href="<?php echo base_url()?>">Accueil</a></li>
+                            <li><a href="<?php echo base_url(index_page() . '/pages/accueil')?>">Accueil</a></li>
                             <li><a href="<?php echo base_url(index_page() . '/admin/accueil')?>">Administration</a></li>
                             <li class="dropdown">
                             	<a href="#theme" class="dropdown-toggle" data-toggle="dropdown">Theme</a>

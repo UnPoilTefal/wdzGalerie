@@ -2,8 +2,7 @@
 $(document).ready(function(){
 	
 	$("#lancer").click(function( event ) {
-				$(this).button({ disabled: true });
-				$(this).button({ label: "Traitement en cours..." });
+				$(this).button('loading');
 	            var me = $('.progress .bar');
 	            var max_perc = 100;
 	            var url = '<?php echo base_url(index_page().'/admin/genminiature');?>';
@@ -30,7 +29,17 @@ $(document).ready(function(){
 		           $("#message").append("<div class='alert'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Warning!</strong> Il n'y a aucune miniature à generer !</div>"); 
 	            }
 		event.preventDefault();
-		$(this).button({ label: "Termin&eacute;!" });
+		$("#message").append("<div class='alert alert-block alert-success fade in'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Succ&egrave;s : </strong> Le traitement des miniatures est terminé</div>");
+		setTimeout(function(){
+			$('#lancer').button('reset');
+			me.css('width', '0%');	
+			me.text('');	
+		}, 3000
+		);
+		
+		
+		
+		
 	});
 
 });

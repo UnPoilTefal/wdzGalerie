@@ -15,7 +15,11 @@ class Gallery_model_xml extends CI_Model {
 		
 		$galerie = $this->get_existing_gallery($p_dir_name);
 		
-		$num_images_by_page = $p_num_row * $p_num_by_row;
+		if($p_num_row == 0 || $p_num_by_row == 0) {
+			$num_images_by_page = count($galerie->get_lst_images());	
+		} else {
+			$num_images_by_page = $p_num_row * $p_num_by_row;
+		}
 		
 		$page_number = 1;
 		//$image_number = 1;
@@ -44,7 +48,7 @@ class Gallery_model_xml extends CI_Model {
 				$col = 1;
 				$row++;
 			}
-			if($row > $p_num_row) {
+			if($p_num_row > 0 && $row > $p_num_row) {
 				$row = 1;
 				$page_number++;
 			}
